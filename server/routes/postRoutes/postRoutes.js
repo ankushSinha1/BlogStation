@@ -43,7 +43,7 @@ router.route('/:postId/delete').delete(protect, (req, res) => {
     User.findByIdAndUpdate(
         id,{
             $pull: {
-                'posts': `${req.params.postId}`
+                'posts': req.params.postId
             }
         }
     )
