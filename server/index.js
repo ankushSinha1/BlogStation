@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 /*Mongoose setup*/
 //stores the data in local machine for now
 dotenv.config();
-mongoose.connect('mongodb+srv://AnkushSinha:ankushsinha@cluster0.g7s6z4v.mongodb.net/?retryWrites=true&w=majority');
+mongoose.connect(process.env.MONGO);
 app.use(cors({origin: true, credentials: true}));
 app.use('/user', userRoutes);
 app.use('/posts', postRoutes);
