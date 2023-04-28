@@ -16,7 +16,6 @@ export const Newcomment = (props) => {
         .then(res => console.log(res.data))
         .catch(err => console.log(err));
         setText('')
-        navigate(`/posts/${props.postId}`)
     }
     return(
         <div>

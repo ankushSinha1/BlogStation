@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 export const Newpost = () => {
     const navigate = useNavigate();
-    const user = useSelector(state=>state.token.user);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [author, setAuthor] = useState(``);
