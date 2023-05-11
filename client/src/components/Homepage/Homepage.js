@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 export const Homepage = () => {
     const [allPosts, setAllPosts] = useState([]);
-
     useEffect(() => {
         axios.get(`http://localhost:3001/home`)
         .then((res)=>{

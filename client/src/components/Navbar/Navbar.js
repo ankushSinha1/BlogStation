@@ -1,19 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import {useSelector} from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import {actionCreator} from '../../state/index.js';
 import { notify } from "../CustomStyling/index.js";
+import { useEffect, useState } from "react";
 
 export const Navbar = () => {
     const navigate = useNavigate()
-    const dispatch = useDispatch();
-    const actions = bindActionCreators(actionCreator, dispatch);
-    const token = useSelector(state=>state.token);
-    const isToken = Boolean(useSelector(state=>state.token));
-    const loggedIn = (token) => {
-        if(!isToken){
+    const [user, setUser] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    useEffect(()=>{
+        const loggedInUser = localStorage.getItem('user')
+        if(loggedInUser){
+            console.log('Hit')
+            const foundUser = loggedInUser;
+            setUser(foundUser);
+            setIsLoggedIn(true)
+        }
+    }, [])
+    const loggedIn = (isLoggedIn) => {
+        if(!isLoggedIn){
             return(
                 <div className="right menu">
                     <div>
@@ -22,23 +26,26 @@ export const Navbar = () => {
                     <div>
                         <Link to='/user/new' className="item">Sign Up</Link>
                     </div>
-                </div>
+                    
+                </div>                
             )
-        }else{
+        }
+        else{
             return(
                 <div className="right menu">
                     <div className="item">
-                        <Link to={`/user/${token.user._id}`}>
-                            {token.user.firstName} {token.user.lastName}
+                        <Link to={`/user/${JSON.parse(user).user._id}`}>
+                            {JSON.parse(user).user.firstName} {JSON.parse(user).user.lastName}
                         </Link>
                     </div>
                     <div className="item">
                         <button 
                             className="ui button primary" 
-                            onClick = {()=>{
-                                actions.onLogout(token)
-                                notify('Logged out successfully!')
+                            onClick = {async ()=>{
+                                localStorage.clear()
+                                setIsLoggedIn(false);
                                 navigate('/')
+                                notify('Logged out successfully!')
                             }}
                         >
                             Logout
@@ -46,8 +53,8 @@ export const Navbar = () => {
                     </div>
                 </div>
             )
-        }   
-    }
+        }
+    } 
     return (
         <>
         <div style={{height: '40ptoken', backgroundColor: 'white', marginBottom:'10ptoken'}} >
@@ -61,7 +68,7 @@ export const Navbar = () => {
                 <div>
                     <Link to="/posts/new" className="item">Add post</Link>
                 </div>
-                {loggedIn(token)}
+                {loggedIn(isLoggedIn)}
             </div>
         </div>
         </>

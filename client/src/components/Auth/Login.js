@@ -13,13 +13,6 @@ export const Login = () => {
     const actions = bindActionCreators(actionCreator, dispatch);
     const [email, setemail] = useState('');
     const [password, setPassword] = useState('');
-    // const instance = axios.create({
-    //     baseURL: 'http://localhost:3001/',
-    //     timeout: 30000,
-    //     headers: {
-    //         'authorization': `${token}`
-    //     }
-    // })
     const onSubmit = async (e) => {
         e.preventDefault();
         const loginData = {
@@ -32,11 +25,12 @@ export const Login = () => {
             if(res.status === 200){
                 //Sets the authorization parameter in req.headers
                 axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.accessToken}`;
-                actions.onLogin(res.data.accessToken, res.data.user);
+                localStorage.setItem('user', JSON.stringify(res.data))
+                navigate(0)
+                notify(res.data.msg)
             }else{
                 console.log(res.data.msg)
             }
-            notify(res.data.msg)
         })
         .catch((err) => console.log(err));
         navigate('/home');

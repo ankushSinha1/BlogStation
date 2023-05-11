@@ -12,7 +12,7 @@ router.route('/new').post(protect, (req, res) => {
     let post = new Post(req.body)
     post.save();
     User.findByIdAndUpdate(id, {$push: {"posts": post._id}})
-    .then((data) => {return res.json(data)})
+    .then((data) => {return res.json({msg: "New post added!"})})
     .catch(err => {return res.json(err)})
 })
 //READ
@@ -58,7 +58,7 @@ router.route('/:postId/delete').delete(protect, (req, res) => {
 router.route('/:postId/comment/new').post((req, res) => {
     Comment.create(req.body).
     then((data) => {
-        return res.json(data);
+        return res.json({data, msg: "Comment added!"});
     })
 })
 //READ COMMENTS

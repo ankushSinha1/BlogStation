@@ -7,7 +7,7 @@ export const Showuser = (props) => {
         axios.get(`http://localhost:3001/user/${props.userId.userId}`)
         .then((res)=>{setUserData(res.data)})
         .catch((error) => {console.log(error)})
-    }, [props])
+    }, [])
     if(userData === null){ return <div> User not found </div> }
     else{
         return(

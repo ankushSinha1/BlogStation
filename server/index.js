@@ -1,7 +1,8 @@
 import express from 'express';
 import dotenv from "dotenv";
 import cors from 'cors';
-
+import path from 'path';
+import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes/userRoutes.js';
 import postRoutes from './routes/postRoutes/postRoutes.js';
@@ -9,7 +10,9 @@ import homeRoute from './routes/Homeroute/homeRoute.js';
 import authRoutes from './routes/authRoutes/authRoutes.js';
 import bodyParser from 'body-parser';
 const app = express();
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 //this is important to do or else req.body will always be undefined for us and no data will be posted in the database
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

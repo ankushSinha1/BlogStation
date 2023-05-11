@@ -7,6 +7,7 @@ import {Newcomment} from '../Comments/Newcomment.js'
 
 export const Showpost = (props) => {
     const token = useSelector(state=>state.token);
+    let commentsArray = [];
     let navigate = useNavigate();
     const [postDetails, setPostDetails] = useState({});
     const [postComments, setPostComments] = useState([]);
@@ -15,7 +16,9 @@ export const Showpost = (props) => {
         .then((res) => {setPostDetails(res.data)})
         .catch((err)=>console.log(err));
         axios.get(`http://localhost:3001/posts/${props.postId.postId}/comment`)
-        .then((res) => {setPostComments(res.data)})
+        .then((res) => {
+            setPostComments(res.data)
+        })
         .catch((err) => console.log(err))
     }, [])
     const monthNumberToName = (date) => {

@@ -19,7 +19,7 @@ export const Newuser = () => {
     const [age, setAge] = useState(0)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [dP, setDp] = useState('')
+    const [dP, setDp] = useState("")
     const [bio, setBio] = useState('')
     const [posts] = useState([])
     const [following] = useState(0)
@@ -47,8 +47,7 @@ export const Newuser = () => {
 
     }
     const onChangeDp = (e) => {
-        setDp(e.target.value)
-
+        setDp(e.target.value);
     }
     const onChangeBio = (e) => {
         setBio(e.target.value)
@@ -90,7 +89,7 @@ export const Newuser = () => {
         <div className="container">
         <h3 className="ui center aligned header">Welcome to BlogStation!</h3>
         <h3 className="ui center aligned header">We are glad to have you onBoard</h3>
-            <form className="ui form" onSubmit={onSubmit}>
+            <form className="ui form" onSubmit={onSubmit} encType="multipart/form-data">
                 <div>
                     <div className="field" style={{marginLeft: '15%', marginRight: '15%'}}>
                         <div className="ui two column doubling grid" style={{margin: "10%", marginTop: "0%"}}>
@@ -164,9 +163,8 @@ export const Newuser = () => {
                                 <label>Profile picture</label>
                                 <input 
                                     type="text" 
-                                    name="dP" 
-                                    value={dP}
-                                    placeholder="Provide your profile pic url" 
+                                    name="dP"
+                                    value={dP} 
                                     onChange={onChangeDp}
                                 />
                             </div>
