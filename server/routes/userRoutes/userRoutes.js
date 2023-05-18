@@ -36,8 +36,7 @@ router.route("/new").post(upload.single("dP"), async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (user) {
-    res.status(400);
-    throw new Error("User with this email already exists!");
+    res.json({msg: "User with this email already exists!"})
   }
   //Hashing the inputted password by the user and replacing it with original one and then storing in database
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -60,12 +59,10 @@ router.route("/new").post(upload.single("dP"), async (req, res) => {
   }
 });
 //READ
-router.get("/:userId", protect, (req, res) => {
-  if (req.user.data._id === req.params.userId) {
-    User.findById(req.params.userId).then((data) => {
-      return res.status(200).json(data);
-    });
-  }
+router.route('/:userId').get( (req, res) => {
+  User.findById(req.params.userId).then((data) => {
+    return res.status(200).json(data);
+  });
 });
 
 //UPDATE
@@ -91,7 +88,7 @@ router.route("/:userId/update").patch((req, res) => {
 router.route("/:userId/delete").delete((req, res) => {
   User.findByIdAndRemove(req.params.userId).then((error, data) => {
     if (error) {
-      console.log(error);
+      return res.json(error);
     }
     return res.status(200).json({ msg: "User deleted!" });
   });

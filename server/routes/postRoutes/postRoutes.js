@@ -4,15 +4,32 @@ import Post from '../../models/Post.js';
 import User from '../../models/User.js';
 import Comment from "../../models/Comment.js";
 import { protect } from "../../middleware/index.js";
+import cloudinary from 'cloudinary';
+
+cloudinary.config({
+    cloud_name: 'dvstzyogy',
+    api_key: '544918322574147',
+    api_secret: 'WJv1374MZiWj1W-_zUMnxPAfir4',
+});
+
+const opts = {
+    overwrite: true,
+    invalidate: true,
+    resource_type: "auto",
+};
+router.route('/uploadImage').post(async (req, res)  => {
+        await cloudinary.v2.uploader.upload_large(req.body.myPict, opts)
+        .then(result => {return res.json(result)})
+        .catch(err => {return res.json(err)})
+})
 
 //CREATE
-router.route('/new').post(protect, (req, res) => {
-    const id = req.user.data._id
+router.route('/new').post(protect, async (req, res) => {
+    console.log(req.user)
     req.body.author = `${req.user.data.firstName} ${req.user.data.lastName}`
     let post = new Post(req.body)
-    post.save();
-    User.findByIdAndUpdate(id, {$push: {"posts": post._id}})
-    .then((data) => {return res.json({msg: "New post added!"})})
+    post.save()
+    .then((data) => {return res.json({data, msg: "New post added!"})})
     .catch(err => {return res.json(err)})
 })
 //READ
@@ -40,33 +57,28 @@ router.route('/:postId/update').patch((req, res) => {
 
 router.route('/:postId/delete').delete(protect, (req, res) => {
     let id = req.user.data._id;
-    User.findByIdAndUpdate(
-        id,{
-            $pull: {
-                'posts': req.params.postId
-            }
-        }
-    )
+    var name = `${req.user.data.firstName} ${req.user.data.lastName}`
+    if(name === `${req.user.data.firstName} ${req.user.data.lastName}`)
     Post.findByIdAndRemove(req.params.postId)
-    .then((err) => {
-        if(err){console.log(err)}
+    .then((data) => {   
         return res.json({msg: "Post deleted!"})
-    })
+    }).catch(err => console.log(err))
 })
 
 //CREATE COMMENT
-router.route('/:postId/comment/new').post((req, res) => {
-    Comment.create(req.body).
-    then((data) => {
+router.route('/:postId/comment/new').post(protect, (req, res) => {
+    Comment.create(req.body)
+    .then((data) => {
         return res.json({data, msg: "Comment added!"});
     })
 })
 //READ COMMENTS
 router.route('/:postId/comment').get((req, res) => {
-    Comment.find({postId: req.params.postId}).then((data) => {
+    Comment.find({postId: req.params.postId})
+    .then((data) => {
         return res.json(data);
-        
-    })  
+    })
+    .catch(err =>{return res.json(err)})
 })
 //UPDATE COMMENT
 router.route('/:postId/comment/:commentId').get((req, res) => {

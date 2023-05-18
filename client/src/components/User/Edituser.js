@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from "react";
 import axios from "axios";
-import { notify } from "../CustomStyling";
+// import { notify } from "../CustomStyling";
 import { useNavigate } from "react-router-dom";
 export const Edituser= (props) =>{
     const navigate = useNavigate();
@@ -39,13 +39,12 @@ export const Edituser= (props) =>{
             password: userDetails.password,
             dP: dP,
             bio: bio,
-            posts: userDetails.posts,
             following: userDetails.following,
             followers: userDetails.followers,
         }
         axios.patch(`http://localhost:3001/user/${props.userId.userId}/update`, updatedUser)
         .then((res)=>{
-            notify(res.data.msg)
+            // notify(res.data.msg)
         })
         .catch((error) => {console.log(error)});
         setFirstName('')

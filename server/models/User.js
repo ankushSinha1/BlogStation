@@ -32,10 +32,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    posts:{
-        type: Array,
-        default: [],
-    },
+
     following:{
         type: Number,
         default: 0,

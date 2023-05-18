@@ -3,15 +3,19 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import {Link, useNavigate} from 'react-router-dom'
 import {Newcomment} from '../Comments/Newcomment.js'
+import {monthNumToName} from '../Controllers/monthNumToName.js';
 
 
 export const Showpost = (props) => {
     const token = useSelector(state=>state.token);
-    let commentsArray = [];
     let navigate = useNavigate();
     const [postDetails, setPostDetails] = useState({});
     const [postComments, setPostComments] = useState([]);
+    const user = localStorage.getItem('user')
     useEffect(()=>{
+        if(user){
+            axios.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
+        }
         axios.get(`http://localhost:3001/posts/${props.postId.postId}`)
         .then((res) => {setPostDetails(res.data)})
         .catch((err)=>console.log(err));
@@ -48,6 +52,38 @@ export const Showpost = (props) => {
         }else if(date.getMonth() === 11){
             date.month = 'December'
         }
+        return date
+    }
+    const authForEditAndDeleteComment = (comment) => {
+        if(user && JSON.parse(user).user._id === comment.author._id){
+            return (
+                <>
+                <Link 
+                    to={`/posts/${props.postId.postId}/comment/${comment._id}/edit`} 
+                    className="mini ui primary button"
+                    state={{postId: props.postId.postId, commentId: comment._id}}
+                >
+                    Edit
+                </Link>
+                <button 
+                    onClick={() => {deleteComment(comment._id);}} 
+                    className="mini ui red button"
+                >
+                    Delete
+                </button> 
+                </>
+            )
+        }
+    }
+    const authForEditAndDeletePost = () => {
+        if(user && `${JSON.parse(user).user.firstName} ${JSON.parse(user).user.lastName}` === postDetails.author){
+            return (
+                <>
+                    <Link to={`/posts/${props.postId.postId}/edit`} className="ui button primary">Edit</Link>
+                    <Link to={`/posts/${props.postId.postId}/delete`} className="ui button red">Delete</Link>
+                </>
+            )
+        }
     }
     const deleteComment = (COMMENT_ID) => {
         axios.delete(`http://localhost:3001/posts/${props.postId.postId}/comment/${COMMENT_ID}/delete`)
@@ -59,15 +95,23 @@ export const Showpost = (props) => {
         if(postComments.length>0){
             return (
                 postComments.map((comment) => {
-                    const commentDate = new Date(comment.updatedAt);
-                    {monthNumberToName(commentDate)}
+                    let commentDate = new Date(comment.updatedAt);
+                    commentDate = monthNumToName(commentDate)
                     return (
                         <div className="ui comments" key={comment._id}>
                             <div className="comment">
-                                <img src={''} alt="err" className="avatar"/>
+                                <img 
+                                    src={comment.author.dP} 
+                                    alt="err" 
+                                    className="avatar" 
+                                    style={{height: '55px', width: '55px', borderRadius: '8px'}} 
+                                    onClick={()=>(navigate(`/user/${comment.author._id}`))}
+                                />
                                 <div className="content">
-                                    <a className="author" href="#">{comment.author}</a>
                                     <div className="metadata">
+                                        <a className="author" href={`/user/${comment.author._id}`}>
+                                            {comment.author.firstName} {comment.author.lastName}
+                                        </a>
                                         <div className="date">
                                             <div style={{fontSize: "12px"}}>
                                                 {commentDate.getFullYear()}, 
@@ -86,20 +130,7 @@ export const Showpost = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <Link to={`/posts/${props.postId.postId}/comment/${comment._id}/edit`} 
-                                className="mini ui primary button"
-                                state={{postId: props.postId.postId, commentId: comment._id}}
-                            >
-                                Edit
-                            </Link>
-                            <button 
-                                onClick={() => {
-                                    deleteComment(comment._id);
-                                }} 
-                                className="mini ui red button"
-                            >
-                                Delete
-                            </button>                            
+                            {authForEditAndDeleteComment(comment)}
                             <hr></hr>
                         </div>
                     )
@@ -107,7 +138,10 @@ export const Showpost = (props) => {
             )
         }else{
             return (
+                <>
                 <div>No comments yet!</div>
+                <hr></hr>
+                </>
             )
         }
     }
@@ -120,15 +154,14 @@ export const Showpost = (props) => {
                 <h2>{postDetails.title}</h2>
                 <img src={postDetails.picture} style={{width: "50%"}} alt="NaN"/>
                 <div className="rating">
+                    <i className = "heart icon" alt="err" style={{display: 'inline', transform: {scale: '2'}}}/>{postDetails.likes}{' '}
                     <i className = "flag icon" alt="err" style={{display: 'inline'}}/>{postDetails.totalReports}{' '}
-                    <i className = "heart icon" alt="err" style={{display: 'inline'}}/>{postDetails.likes}{' '}
                 </div>
                 <div>Posted by- "{postDetails.author}"</div>
                 <div>Posted at: {date.getFullYear()}, {date.month} {date.getDate()} at {date.getHours()}:{date.getMinutes()} IST</div>
                 <hr></hr>
                 <p>"{postDetails.description}"</p>
-                <Link to={`/posts/${props.postId.postId}/edit`} className="ui button primary">Edit</Link>
-                <Link to={`/posts/${props.postId.postId}/delete`} className="ui button red">Delete</Link>
+                {authForEditAndDeletePost()}
                 <hr></hr>
                 <div>
                     {allComments()}

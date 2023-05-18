@@ -4,9 +4,7 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    author:{
-        type: String,
-    },
+    author: {},
     postId: String,
     likes:  {
         type: Number,

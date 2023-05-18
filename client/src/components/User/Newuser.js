@@ -6,13 +6,10 @@ import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {actionCreator} from '../../state/index.js';
 
-import {notify} from '../CustomStyling/index.js';
+import {notify} from '../CustomStyling/notify.js';
 export const Newuser = () => {
     const navigate = useNavigate();
-
-    const dispatch = useDispatch();
-    const action = bindActionCreators(actionCreator, dispatch);
-
+    let [msg, setMsg] = useState('');
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
@@ -21,7 +18,6 @@ export const Newuser = () => {
     const [password, setPassword] = useState('')
     const [dP, setDp] = useState("")
     const [bio, setBio] = useState('')
-    const [posts] = useState([])
     const [following] = useState(0)
     const [followers] = useState(0)
     const onChangeFirstName = (e) => {
@@ -53,7 +49,7 @@ export const Newuser = () => {
         setBio(e.target.value)
 
     }
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
         const newUser = {
             firstName: firstName,
@@ -64,15 +60,14 @@ export const Newuser = () => {
             password: password,
             dP: dP,
             bio: bio,
-            posts: posts,
             following: following,
             followers: followers,
         };
         axios.post('http://localhost:3001/user/new', newUser)
         .then((res) => {
-            console.log(res.data)
-            action.onLogin(res.data.token, res.data.user)
-            notify(res.data.msg)
+            localStorage.setItem('user', JSON.stringify(res.data))
+            axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+            navigate(0)
         })
         .catch((error) => {console.log(error)});
         setFirstName('')
@@ -84,6 +79,7 @@ export const Newuser = () => {
         setDp('')
         setBio('')
         navigate(`/home`)
+        notify('Welcome to BlogStation')
     }
     return(
         <div className="container">
@@ -185,6 +181,14 @@ export const Newuser = () => {
                                     placeholder="Submit" 
                                     className="ui blue button"
                                 />
+                            </div>
+                            <div>
+                                <button 
+                                    className='ui button red' 
+                                    onClick={() => navigate(-1)}
+                                >
+                                    Cancel
+                                </button>
                             </div>
                         </div>
                     </div>

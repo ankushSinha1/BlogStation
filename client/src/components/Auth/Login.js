@@ -1,10 +1,11 @@
+import React, { useEffect } from 'react';
 import { useState} from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {actionCreator} from '../../state/index.js';
-import { notify } from '../CustomStyling/index.js';
+import { notify } from '../CustomStyling/notify.js';
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -13,6 +14,7 @@ export const Login = () => {
     const actions = bindActionCreators(actionCreator, dispatch);
     const [email, setemail] = useState('');
     const [password, setPassword] = useState('');
+
     const onSubmit = async (e) => {
         e.preventDefault();
         const loginData = {
@@ -21,19 +23,18 @@ export const Login = () => {
         }
         axios.post('http://localhost:3001/login', loginData)
         .then((res) => {
-            console.log(res.data.msg)
-            if(res.status === 200){
+            if(res.data.token){
                 //Sets the authorization parameter in req.headers
-                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.accessToken}`;
                 localStorage.setItem('user', JSON.stringify(res.data))
+                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+                navigate('/home');
                 navigate(0)
                 notify(res.data.msg)
             }else{
-                console.log(res.data.msg)
+                notify(res.data.msg)
             }
         })
         .catch((err) => console.log(err));
-        navigate('/home');
     }
     return(
         <div className="container">
@@ -61,19 +62,19 @@ export const Login = () => {
                                 onChange={e=>setPassword(e.target.value)}
                             />
                         </div>                            
-                        <div style={{alignItems: "center"}}>
+                        <div style={{alignItems: "center", display: 'inline'}}>
                             <input 
                                 type="submit" 
                                 placeholder="Submit" 
                                 className="ui blue button"
                             />
-                            <button 
-                                className="ui button red"
-                                onClick={() => {navigate(-1)}}
-                            >
-                                Cancel
-                            </button>
                         </div>
+                        <button 
+                            className="ui button red"
+                            onClick={() => {navigate(-1)}}
+                            >
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </form>

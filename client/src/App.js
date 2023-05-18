@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
 import {Welcomepage} from './components/Welcomepage/Welcomepage.js';
 import {Homepage} from './components/Homepage/Homepage.js';
@@ -42,6 +43,7 @@ function App() {
     const {postId} = useParams();
     return <Deletepost postId = {{postId}}/>
   }
+  
   return (
     <div className="App">
       <BrowserRouter>

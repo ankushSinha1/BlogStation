@@ -10,9 +10,11 @@ import homeRoute from './routes/Homeroute/homeRoute.js';
 import authRoutes from './routes/authRoutes/authRoutes.js';
 import bodyParser from 'body-parser';
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+app.use(express.json({limit: '25mb'}))
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    next();
+  });
 //this is important to do or else req.body will always be undefined for us and no data will be posted in the database
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

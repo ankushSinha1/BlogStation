@@ -3,13 +3,29 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 export const Showuser = (props) => {
     const [userData, setUserData] = useState({})
+    let user = localStorage.getItem('user')
     useEffect(() => {
+        if(user){
+            axios.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
+        }
         axios.get(`http://localhost:3001/user/${props.userId.userId}`)
         .then((res)=>{setUserData(res.data)})
         .catch((error) => {console.log(error)})
     }, [])
     if(userData === null){ return <div> User not found </div> }
     else{
+        const authForEditAndDeleteUser = () => {
+            if(JSON.parse(user).user._id === props.userId.userId){
+                return (
+                    <>
+                        <Link to={`/user/${props.userId.userId}/edit`} className="ui button primary">Edit</Link>
+                        <Link to={`/user/${props.userId.userId}/delete`} className="ui button red">Delete</Link>
+                    </>
+                )
+            }else{
+                return(<></>)
+            }
+        }
         return(
             <div>
                 <img src={userData.dP} className="ui medium circular image" alt="err" style={{width: "200px", height:"200px"}}/>
@@ -19,11 +35,13 @@ export const Showuser = (props) => {
                 <div>{userData.age}</div>
                 <div>{userData.email}</div>
                 <div>{userData.bio}</div>
-                <div>{userData.posts}</div>
                 <div>{userData.following}</div>
                 <div>{userData.followers}</div>
+                {authForEditAndDeleteUser()}
+
+{/*                 
                 <Link to={`/user/${props.userId.userId}/edit`} className="ui button primary">Edit</Link>
-                <Link to={`/user/${props.userId.userId}/delete`} className="ui button red">Delete</Link>
+                <Link to={`/user/${props.userId.userId}/delete`} className="ui button red">Delete</Link> */}
             </div>
         )
     }
