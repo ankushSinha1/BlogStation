@@ -1,18 +1,26 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import axios from 'axios'
 import { notify } from "../CustomStyling/notify.js";
+// import { Logout } from "../Auth/Logout.js";
 import { useEffect, useState } from "react";
+const user = localStorage.getItem('user')
 
 export const Navbar = () => {
     const navigate = useNavigate()
-    const user = localStorage.getItem('user')
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     useEffect(()=>{
         if(user) {
             setIsLoggedIn(true)
         }
     }, [])
+    const Logout = async () => {        
+        localStorage.clear()
+        axios.defaults.headers.common['Authorization'] = '';
+        setIsLoggedIn(false)
+        notify('Logged out successfully!')
+    }
     const loggedIn = (isLoggedIn) => {
         if(!isLoggedIn){
             return(
@@ -38,11 +46,9 @@ export const Navbar = () => {
                     <div className="item">
                         <button 
                             className="ui button primary" 
-                            onClick = {async ()=>{
-                                localStorage.clear('user')
-                                setIsLoggedIn(false);
-                                navigate('/')
-                                notify('Logged out successfully!')
+                            onClick = {()=>{
+                                Logout()
+                                navigate('/home')
                             }}
                         >
                             Logout

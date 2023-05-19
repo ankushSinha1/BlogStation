@@ -3,20 +3,22 @@ const router = express.Router();
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../../models/User.js';
+import RefToken from '../../models/refToken.js';
 const tokenList = [];
 
 //A function that generates a access token
 const tokenGen = (data) => {
-    return jwt.sign({data},process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'})
+    return jwt.sign({data},process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30m'})
 }
 //A function that generates a refresh token
 const refreshTokenGen = (data) => {
-    return jwt.sign({data}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '2h'})
+    return jwt.sign({data}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '2d'})
 }
 
 //LOGIN ROUTE
 
 router.route('/login').post(async (req, res) => {
+
     const user = await User.findOne({email: req.body.email});
     if (!user) {return res.json({ msg: "User does not exist. "})};
     try{
@@ -33,16 +35,8 @@ router.route('/login').post(async (req, res) => {
                 refToken: refToken,
                 msg: `Welcome back, ${user.firstName} ${user.lastName} ! `
             }
-            tokenList[refToken] = response
-            // var isExpiredToken = false;
-            // var dateNow = new Date();
-            // if(decoded.exp < dateNow.getTime()/1000){
-            //     isExpiredToken = true;
-            // }
-            //Get user from the token
-            // if(isExpiredToken){
-            //     axios.post('http://localhost:3001/token')
-            // }
+            let newRefToken = new RefToken({refToken: refToken})
+            newRefToken.save();
             try{
                 return res.json(response)
 
@@ -51,24 +45,45 @@ router.route('/login').post(async (req, res) => {
             }
         }
     }catch(err){
-        return res.json({err: err})
+        console.log(err)
+        return res.json({msg: err.toString()})
     }
 });
 
-// router.route('/token').post(async (req, res) => {
-//     var refToken = req.body.refToken;
-//     if(refToken in tokenList){
-//         const response = {
-//             user: req.body.user,
-//             token: tokenGen(req.body.user),
-//             refToken: refreshTokenGen(req.body.user),
-//             msg: `Welcome back, ${req.body.user.firstName} ${req.body.user.lastName} ! `
-//         }
-//         try{
-//             return res.json(response)
-//         }catch(err){
-//             return res.json(err)
-//         }
-//     }
-// })
+//Storing refToken in Database
+router.route('/refToken').post(async (req, res) => {
+    // console.log(JSON.parse(req.body))
+    let dataInside = await RefToken.findOne({refToken: req.body.refToken})
+    if(dataInside){
+        jwt.verify(dataInside.refToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+            if(err){
+                if(err.toString()==='TokenExpiredError: jwt expired'){
+                    return res.json({msg: 'RefToken expired'})
+                }
+                return res.json({msg: err.toString()})
+            }else{
+                const response = {
+                    user: req.body.user,
+                    token: tokenGen(req.body.user),
+                    refToken: dataInside.refToken,
+                }
+                try{
+                    return res.json(response)
+                }catch(err){
+                    return res.json({msg: err.toString()})
+                }
+            }
+        })
+    }else{
+        return res.json({msg: 'Refresh token not found!'})
+    }
+})
+router.route('/deleteRefToken').post(async (req, res) => {
+    let foundToken = await RefToken.findOne({refToken: req.body.refToken})
+    if(foundToken){
+        RefToken.deleteOne({refToken: foundToken.refToken})
+        .then(data => {return res.json({msg: 'Token removed from database'})})
+        .catch(err => console.log(err))
+    }
+})
 export default router;

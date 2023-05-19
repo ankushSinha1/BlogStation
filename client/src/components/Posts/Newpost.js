@@ -1,6 +1,5 @@
 import React,{useEffect, useState} from "react"
 import axios from 'axios'
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {notify} from '../CustomStyling/notify.js'
 export const Newpost = () => {
@@ -53,7 +52,6 @@ export const Newpost = () => {
         //For uploading image on cloudinary
         await axios.post('http://localhost:3001/posts/uploadImage', picture)
         .then(res => {
-            notify('Image uploaded!')
             newPost.picture = res.data.secure_url
         })
         .catch(err => console.log(err))
@@ -61,8 +59,32 @@ export const Newpost = () => {
         //For creating a new post
         axios.post('http://localhost:3001/posts/new', newPost)
         .then((res) => {
-            notify(res.data.msg)
-            navigate('/home')
+            if(res.data.msg === 'Token expired!'){
+                notify('Id expired.')
+                axios.post('http://localhost:3001/refToken', JSON.parse(user))
+                .then(data => {
+                    if(data.data.msg === 'RefToken expired'){
+                        axios.post('http://localhost:3001/deleteRefToken', JSON.parse(user))
+                        .then(data => console.log(data))
+                        .catch(err => console.log(err))
+
+                        notify('Error occurred. Login required')
+                        navigate('/login')
+                    }else{
+                        localStorage.clear()
+                        localStorage.setItem('user', JSON.stringify(data.data))
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
+                        navigate('/home')
+                        notify('New Id registered!')
+                        notify("Could not submit your post. Try again.")
+                    }
+                })
+                .catch(err => console.log(err))
+            }
+            else{
+                notify('New post added!')
+                navigate('/home')
+            }
         })
         .catch(err => console.log(err))
         setTitle('')
@@ -89,7 +111,7 @@ export const Newpost = () => {
                                 />
                             </div>
                             <div className="field column">
-                                <label htmlFor="pict">Upload a picture</label>
+                                <label htmlFor="pict">Upload a picture *</label>
                                 <input
                                     type="file"
                                     id="pict"

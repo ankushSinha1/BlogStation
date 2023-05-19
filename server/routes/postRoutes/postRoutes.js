@@ -25,12 +25,26 @@ router.route('/uploadImage').post(async (req, res)  => {
 
 //CREATE
 router.route('/new').post(protect, async (req, res) => {
-    console.log(req.user)
-    req.body.author = `${req.user.data.firstName} ${req.user.data.lastName}`
-    let post = new Post(req.body)
-    post.save()
-    .then((data) => {return res.json({data, msg: "New post added!"})})
-    .catch(err => {return res.json(err)})
+    // if(req.user.msg){
+    //     return res.json({msg: 'You need to login again!'})
+    // }
+    console.log(req.status)
+    if(req.status.msg === 'Token expired!'){
+        return res.json(req.status)
+    }
+    try{
+        if(req.user){
+            req.body.author = `${req.user.data.firstName} ${req.user.data.lastName}`
+            let post = new Post(req.body)
+            post.save()
+            .then((data) => {return res.json({data, msg: "New post added!"})})
+            .catch(err => {return res.json({msg: err.toString()})})
+        }else{
+            return res.json(req.status);
+        }
+    }catch(err){
+        return res.json({msg: err.toString()})
+    }
 })
 //READ
 router.route('/:postId').get((req, res) => {
