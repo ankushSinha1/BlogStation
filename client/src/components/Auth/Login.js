@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useState} from 'react';
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {actionCreator} from '../../state/index.js';
@@ -37,10 +37,25 @@ export const Login = () => {
         .catch((err) => console.log(err));
     }
     return(
-        <div className="container">
-            <form className="ui form" onSubmit={onSubmit}>
+        <div 
+        style={{minWidth: '500px'}}>
+            <form className="ui form" onSubmit={onSubmit} 
+                style={{
+                        margin: 'auto',
+                        width: '50%',
+                        minWidth: '500px',
+                        // fontFamily: 'Montserrat'
+                        
+                        }}>
                 <div>
-                    <div className="field" style={{margin: '10%'}}>
+                    <div className="field" style={{
+                        border: '25px solid white',
+                        borderRadius: '4px',
+                        margin: '5%',
+                        background: 'white',
+                        opacity: '90%'
+                        
+                    }}>
                         <h1 className="ui center aligned header">Login</h1>
                         <div className="field column" >
                             <label>Email</label>
@@ -66,15 +81,21 @@ export const Login = () => {
                             <input 
                                 type="submit" 
                                 placeholder="Submit" 
-                                className="ui blue button"
+                                className="ui positive button fluid"
                             />
+
                         </div>
+                        <div style={{height: '10px'}}></div>
+                            {/* <br></br> */}
                         <button 
-                            className="ui button red"
+                            className="ui button red fluid"
                             onClick={() => {navigate(-1)}}
                             >
                             Cancel
                         </button>
+                        <div style={{margin: '10px'}}>
+                            Don't have an account? <Link to='/user/new'> Register now!</Link>
+                        </div>
                     </div>
                 </div>
             </form>

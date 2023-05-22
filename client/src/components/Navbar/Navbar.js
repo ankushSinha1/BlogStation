@@ -27,12 +27,12 @@ export const Navbar = () => {
     const loggedIn = (isLoggedIn) => {
         if(!isLoggedIn){
             return(
-                <div className="right menu">
-                    <div>
-                        <Link to='/login' className="item">Login</Link>
+                <div className="right menu" >
+                    <div  className="item" style={{padding: '4px'}}> 
+                        <div className=" ui button primary" onClick={()=>navigate('/login')}>Login</div>
                     </div>
-                    <div>
-                        <Link to='/user/new' className="item">Sign Up</Link>
+                    <div className="item" style={{padding: '4px'}}>
+                        <div className=" ui button primary" onClick={()=>navigate('/user/new')}>Sign Up</div>
                     </div>
                     
                 </div>                
@@ -41,21 +41,21 @@ export const Navbar = () => {
         else{
             return(
                 <div className="right menu">
-                    <div className="item">
-                            <Link to={`/user/${JSON.parse(user).user._id}`}>
-                                {JSON.parse(user).user.firstName} {JSON.parse(user).user.lastName}
-                            </Link>
+                    <div  className="item">
+                        <div onClick={()=>{navigate(`/user/${JSON.parse(user).user._id}`)}} style={{cursor: 'pointer'}}>
+                            <b>{JSON.parse(user).user.username}</b>
+                        </div>
                     </div>
-                    <div className="item">
-                        <button 
-                            className="ui button primary" 
+                    <div className="item" style={{padding: '2px'}}>
+                        <div 
+                            className="ui button negative" 
                             onClick = {()=>{
                                 Logout()
                                 navigate('/home')
                             }}
                         >
                             Logout
-                        </button>
+                        </div>
                     </div>
                 </div>
             )
@@ -63,16 +63,25 @@ export const Navbar = () => {
     } 
     return (
         <>
-        <div style={{height: '40px', width: '100%', marginBottom: '10px'}} >
-            <div className="ui secondary pointing menu" style={{height: '50px', backgroundColor: 'white'}}>
-                <div>
-                    <Link to='/' className="item">BlogStation</Link>
+        <div style={{
+                width: '100%',
+                minWidth: '570px',
+                    // marginBottom: '40px',
+                    overflow: 'auto',
+                    border: '0px'
+                    // padding: "1%",
+                    // float: 'left',
+                    // backgroundColor: 'white'
+        }} >
+            <div className="ui menu " style={{backgroundColor: 'white'}}>
+                <div  className='item' onClick={()=>{navigate('/')}} style={{cursor: 'pointer'}}>
+                    <div>BlogStation</div>
                 </div>
-                <div>
-                    <Link to="/home" className="item">Home</Link>
+                <div  className="item" onClick={()=>{navigate('/home')}} style={{cursor: 'pointer'}}>
+                    <div >Home</div>
                 </div>
-                <div>
-                    <Link to="/posts/new" className="item">Add post</Link>
+                <div  className="item" onClick={()=>{navigate('/posts/new')}} style={{cursor: 'pointer'}}>
+                    <div >Add post</div>
                 </div>
                 {loggedIn(isLoggedIn)}
             </div>

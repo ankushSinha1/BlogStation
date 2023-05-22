@@ -8,11 +8,11 @@ const tokenList = [];
 
 //A function that generates a access token
 const tokenGen = (data) => {
-    return jwt.sign({data},process.env.ACCESS_TOKEN_SECRET, {expiresIn: '2h'})
+    return jwt.sign({data},process.env.ACCESS_TOKEN_SECRET, {expiresIn: '24h'})
 }
 //A function that generates a refresh token
 const refreshTokenGen = (data) => {
-    return jwt.sign({data}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '2d'})
+    return jwt.sign({data}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d'})
 }
 
 //LOGIN ROUTE

@@ -24,6 +24,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Navbar/>
+        <div className='container' style={{padding: '1%'}}>
         <Routes>
           <Route path='/' element={Welcomepage()}/>
           <Route path='/home' element={<Homepage/>}/>
@@ -39,6 +40,7 @@ function App() {
           <Route path='/login' element={<Login/>}/>
           <Route path='/register' element={Register()}/>
         </Routes>
+        </div>
       </BrowserRouter>
       <ToastContainer />
     </div>

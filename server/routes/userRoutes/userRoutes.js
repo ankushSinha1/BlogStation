@@ -23,10 +23,10 @@ router.route('/uploadImage').post(async (req, res)  => {
   .catch(err => {return res.json(err)})
 })
 const tokenGen = (data) => {
-  return jwt.sign({ data }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "2h",});
+  return jwt.sign({ data }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "24h",});
 };
 const refreshTokenGen = (data) => {
-  return jwt.sign({ data }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "2d"});
+  return jwt.sign({ data }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "7d"});
 };
 //CREATE
 router.route("/new").post(async (req, res) => {

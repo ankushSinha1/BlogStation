@@ -103,26 +103,44 @@ export const Newuser = () => {
         notify('Welcome to BlogStation')
     }
     return(
-        <div className="container">
-        <h3 className="ui center aligned header">Welcome to BlogStation!</h3>
-        <h3 className="ui center aligned header">We are glad to have you onBoard</h3>
-            <form className="ui form" onSubmit={onSubmit} encType="multipart/form-data">
+        <div>
+            <form 
+                className="ui form" 
+                onSubmit={onSubmit} 
+                encType="multipart/form-data"
+                style={{
+                    margin: 'auto',
+                        width: '70%',
+                        minWidth: '570px',
+                }}
+            >
                 <div>
-                    <div className="field" style={{marginLeft: '15%', marginRight: '15%'}}>
+                    <div className="field" 
+                        style={{
+                            // marginLeft: '15%',
+                            // marginRight: '15%',
+                            border: '15px solid white',
+                            borderRadius: '4px',
+                            margin: '5%',
+                            background: 'white',
+                            opacity: '90%'
+                        }}>
+                            <h3 className="ui center aligned header">Welcome to BlogStation!</h3>
+                            <h3 className="ui center aligned header">We are glad to have you onBoard</h3>
                         <div className="ui two column doubling grid" style={{margin: "10%", marginTop: "0%"}}>
-                            <div className="field column" >
-                                <label>First Name *</label>
+                            <div className="field column required" >
+                                <label>First Name</label>
                                 <input 
                                     type="text" 
                                     name="firstName" 
                                     value={firstName}
-                                    placeholder="Enter first name" 
+                                    placeholder="Enter first name " 
                                     required
                                     onChange={onChangeFirstName}
                                 />
                             </div>
-                            <div className="field column">
-                                <label>Last Name *</label>
+                            <div className="field column required">
+                                <label>Last Name</label>
                                 <input 
                                     type="text" 
                                     name="lastName" 
@@ -132,8 +150,8 @@ export const Newuser = () => {
                                     onChange={onChangeLastName}
                                 />
                             </div>
-                            <div className="field column" >
-                                <label>Username *</label>
+                            <div className="field column required" >
+                                <label>Username</label>
                                 <input 
                                     type="text" 
                                     name="userName" 
@@ -143,8 +161,8 @@ export const Newuser = () => {
                                     onChange={onChangeUsername}
                                 />
                             </div>
-                            <div className="field column">
-                                <label>Age *</label>
+                            <div className="field column required">
+                                <label>Age</label>
                                 <input 
                                     type="number" 
                                     name="age" 
@@ -154,8 +172,8 @@ export const Newuser = () => {
                                     onChange={onChangeAge}
                                 />
                             </div>
-                            <div className="field column" >
-                                <label>Email *</label>
+                            <div className="field column required" >
+                                <label>Email</label>
                                 <input 
                                     type="email" 
                                     name="email" 
@@ -165,8 +183,8 @@ export const Newuser = () => {
                                     onChange={onChangeEmail}
                                 />
                             </div>
-                            <div className="field column" >
-                                <label>Password *</label>
+                            <div className="field column required" >
+                                <label>Password</label>
                                 <input 
                                     type="password" 
                                     name="password" 
@@ -176,22 +194,38 @@ export const Newuser = () => {
                                     onChange={onChangePassword}
                                 />
                             </div>
-                            <div className="field column" >
-                                <label>Profile picture</label>
+                            <div className="ui segment field column"
+                                style={{
+                                    height: '150px',
+                                    padding: '14px',
+                                    width: '100%',
+                                    // marginTop: '30px',
+                                    marginBottom: '33px'
+                                }}
+                            >
+                                <label for='IMAGE' 
+                                    style={{
+                                        height: '20px'
+                                    }}
+                                >
+                                    Upload an image
+                                </label>
                                 <input 
                                     type="file" 
                                     name="dP"
+                                    id='IMAGE'
                                     accept='.png, .jpg, .jpeg'
-
+                                    hidden='true'
                                     onChange={e => onChangeDp(e)}
                                 />
                             </div>
-                            <div className="field column" >
-                                <label>About</label>
+                            <div className="two column row" >
+                                <label for='bio'>About</label>
                                 <textarea 
                                     rows="3" 
                                     cols="4" 
                                     value={bio}
+                                    id='bio'
                                     placeholder="Let others know about you..." 
                                     name="bio" 
                                     onChange={onChangeBio}
@@ -201,12 +235,12 @@ export const Newuser = () => {
                                 <input 
                                     type="submit" 
                                     placeholder="Submit" 
-                                    className="ui blue button"
+                                    className="ui blue button fluid"
                                 />
                             </div>
                             <div>
                                 <button 
-                                    className='ui button red' 
+                                    className='ui button red fluid' 
                                     onClick={() => navigate(-1)}
                                 >
                                     Cancel
