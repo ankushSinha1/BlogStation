@@ -8,7 +8,7 @@ const tokenList = [];
 
 //A function that generates a access token
 const tokenGen = (data) => {
-    return jwt.sign({data},process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30m'})
+    return jwt.sign({data},process.env.ACCESS_TOKEN_SECRET, {expiresIn: '2h'})
 }
 //A function that generates a refresh token
 const refreshTokenGen = (data) => {

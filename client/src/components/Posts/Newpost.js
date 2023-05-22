@@ -8,13 +8,20 @@ export const Newpost = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [picture, setPicture] = useState({myPict: ''});
+    const [authorDetails, setAuthorDetails] = useState({});
 
     useEffect(()=>{
         if(!user){
             notify('You need to be logged in to do that!')
             navigate('/login')
+        }else{
+
+            axios.get(`http://localhost:3001/user/${JSON.parse(user).user._id}`)
+            .then((res) => {
+                setAuthorDetails(res.data)
+            }).catch(err => console.log(err))
         }
-    })
+    }, [])
     const onChangeTitle = (e) => {
         setTitle(e.target.value);
     }
@@ -43,7 +50,7 @@ export const Newpost = () => {
         const newPost = {
             title: title,
             description: description,
-            author: '',
+            author: authorDetails,
             picture: picture.myPict,
             comments: [],
             likes: 0,
@@ -59,18 +66,20 @@ export const Newpost = () => {
         //For creating a new post
         axios.post('http://localhost:3001/posts/new', newPost)
         .then((res) => {
+            //if access token is expired
             if(res.data.msg === 'Token expired!'){
                 notify('Id expired.')
                 axios.post('http://localhost:3001/refToken', JSON.parse(user))
                 .then(data => {
+                    //if reftoken is also expired
                     if(data.data.msg === 'RefToken expired'){
                         axios.post('http://localhost:3001/deleteRefToken', JSON.parse(user))
                         .then(data => console.log(data))
                         .catch(err => console.log(err))
-
                         notify('Error occurred. Login required')
                         navigate('/login')
                     }else{
+                        //if reftoken is intact
                         localStorage.clear()
                         localStorage.setItem('user', JSON.stringify(data.data))
                         axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
@@ -82,6 +91,7 @@ export const Newpost = () => {
                 .catch(err => console.log(err))
             }
             else{
+                //if access token is intact
                 notify('New post added!')
                 navigate('/home')
             }

@@ -6,9 +6,7 @@ const postSchema = new mongoose.Schema({
     description:{
         type: String,
     },
-    author:{
-        type: String,       
-    },
+    author:{},
     picture:{
         type: String,
     },

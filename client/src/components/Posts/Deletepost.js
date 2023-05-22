@@ -1,18 +1,41 @@
 import axios from 'axios';
-import React, { useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { notify } from '../CustomStyling/notify';
-export const Deletepost = async (props) => {
-    // const navigate = useNavigate();
-    useEffect( ()=>{
-        axios.delete(`http://localhost:3001/posts/${props.postId.postId}/delete`)
+export const Deletepost = (props) => {
+    const {postId} = useParams();
+    const [postDetails, setPostDetails] = useState({});
+    const user = localStorage.getItem('user')
+    const navigate = useNavigate();
+    useEffect(()=> {
+        axios.get(`http://localhost:3001/posts/${postId}`)
+        .then(res => {setPostDetails(res.data)})
+        .catch(err => console.log(err))
+        axios.delete(`http://localhost:3001/posts/${postId}/delete`)
         .then(res => {
             notify(res.data.msg)
         })
         .catch(err => {
             console.log(err)
         })
-        // navigate('/home')
+        
+        if(postDetails.author){
+            if(postDetails.author.username === JSON.parse(user).user.username){      
+                console.log(postDetails)
+                axios.delete(`http://localhost:3001/posts/${postId}/delete`)
+                .then(res => {
+                    notify(res.data.msg)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            }else{
+                notify('You are not authorized to access this route!')
+            }
+            notify('Post deleted')
+            navigate('/home')
+        }
     }, [])
-    return(<></>)
+
+    return(<div></div>)
 }

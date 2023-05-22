@@ -1,8 +1,9 @@
 import React,{useState, useEffect} from "react";
 import axios from "axios";
-// import { notify } from "../CustomStyling";
-import { useNavigate } from "react-router-dom";
-export const Edituser= (props) =>{
+import { notify } from "../CustomStyling/notify";
+import { useNavigate, useParams } from "react-router-dom";
+export const Edituser= () =>{
+    var {userId} = useParams()
     const navigate = useNavigate();
     const [userDetails, setUserDetails] = useState({});
     const [firstName, setFirstName] = useState('')
@@ -10,25 +11,73 @@ export const Edituser= (props) =>{
     const [username, setUsername] = useState('')
     const [age, setAge] = useState(0)
     const [email, setEmail] = useState('')
-    const [dP, setDp] = useState('')
+    const [dP, setDp] = useState({myPict: ''})
     const [bio, setBio] = useState('')
+    const user = localStorage.getItem('user')
 
-    useEffect(() => {
-        axios.get(`http://localhost:3001/user/${props.userId.userId}/edit`)
+    useEffect( () => {
+        if(!user){
+            notify('You need to be logged in to do that!')
+            navigate('/login')
+        }
+        //Before rendering the edit user form
+         axios.get(`http://localhost:3001/user/${userId}/edit`)
         .then((res)=>{
-            setUserDetails(res.data)
+            if(res.data.msg === 'Token expired!'){
+                notify('Id expired.')
+                axios.post('http://localhost:3001/refToken', JSON.parse(user))
+                .then(data => {
+                    //if reftoken is also expired
+                    if(data.data.msg === 'RefToken expired'){
+                        axios.post('http://localhost:3001/deleteRefToken', JSON.parse(user))
+                        .then(data => console.log(data))
+                        .catch(err => console.log(err))
+                        notify('Error occurred. Login required')
+                        navigate('/login')
+                    }else{
+                        //if reftoken is intact
+                        localStorage.clear()
+                        localStorage.setItem('user', JSON.stringify(data.data))
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
+                        navigate('/home')
+                        notify('New Id registered!')
+                        notify("Could not edit user details. Try again.")
+                    }
+                })
+                .catch(err => console.log(err))
+            }else{
+                setUserDetails(res.data)
+                //These are to set the initial values of states right away
+                setFirstName(userDetails.firstName);
+                setLastName(userDetails.lastName);
+                setUsername(userDetails.username);
+                setAge(userDetails.age);
+                setEmail(userDetails.email);
+                setDp({myPict: userDetails.dP});
+                setBio(userDetails.bio);
+            }
         })
         .catch((error) => {console.log(error)})
-        //These are to set the initial values of states right away
-        setFirstName(userDetails.firstName);
-        setLastName(userDetails.lastName);
-        setUsername(userDetails.username);
-        setAge(userDetails.age);
-        setEmail(userDetails.email);
-        setDp(userDetails.dP);
-        setBio(userDetails.bio);
-    }, [props])
-    const onSubmit = (event) => {
+
+    }, [])
+    const onChangeDp = async(e) => {
+        const file = e.target.files[0]
+        const base64 = await convToBase64(file)
+        setDp({myPict: base64})
+    }
+    const convToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader()
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => {
+                resolve(fileReader.result)
+            }
+            fileReader.onerror = (error) =>{
+                reject(error)
+            }
+        })
+    }
+    const onSubmit = async (event) => {
         event.preventDefault();
         const updatedUser = {
             firstName: firstName,
@@ -37,14 +86,19 @@ export const Edituser= (props) =>{
             age: age,
             email: email,
             password: userDetails.password,
-            dP: dP,
+            dP: dP.myPict,
             bio: bio,
             following: userDetails.following,
             followers: userDetails.followers,
         }
-        axios.patch(`http://localhost:3001/user/${props.userId.userId}/update`, updatedUser)
+        if(dP.myPict){
+            await axios.post('http://localhost:3001/user/uploadImage', dP)
+            .then(res => {updatedUser.dP = res.data.secure_url})
+            .catch(err => console.log(err))
+        }
+        await axios.patch(`http://localhost:3001/user/${userId}/update`, updatedUser)
         .then((res)=>{
-            // notify(res.data.msg)
+            notify(res.data.msg)
         })
         .catch((error) => {console.log(error)});
         setFirstName('')
@@ -52,12 +106,20 @@ export const Edituser= (props) =>{
         setUsername('')
         setAge(0)
         setEmail('')
-        setDp('')
+        setDp({myPict: ''})
         setBio('')        
         navigate(-1)
+
     }
     const cancel = () => {
         navigate(`/user/${userDetails._id}`)
+    }
+    const showImage = () => {
+        if(dP.myPict){
+            return dP.myPict
+        }else{
+            return userDetails.dP
+        }
     }
     return(
         <div>
@@ -65,7 +127,26 @@ export const Edituser= (props) =>{
             <form className="ui form" onSubmit={onSubmit}>
                 <div>
                     <div className="field" style={{marginLeft: '15%', marginRight: '15%'}}>
-                        <div className="ui two column doubling grid" style={{margin: "10%", marginTop: "0%"}}>
+                        <img src={showImage()} alt='NAN' className="ui medium circular image"/>
+                        <div>
+                            <label>Change profile picture</label>
+                            <input 
+                                type="file"
+                                name='dP'
+                                accept='.png, .jpg, .jpeg'
+                                onChange={(e)=>onChangeDp(e)}
+                            />
+                        </div>
+                        <div className="ui two column grid" style={{margin: "10%", marginTop: "0%"}}>
+                            {/* <div className="field column" >
+                                <label>Profile picture</label>
+                                <input 
+                                    type="text" 
+                                    name="dP" 
+                                    defaultValue={userDetails.dP}
+                                    onChange={e => setDp(e.target.value)}
+                                />
+                            </div> */}
                             <div className="field column" >
                                 <label>First Name *</label>
                                 <input 
@@ -114,15 +195,6 @@ export const Edituser= (props) =>{
                                     defaultValue={userDetails.email}
                                     required
                                     onChange={e => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <div className="field column" >
-                                <label>Profile picture</label>
-                                <input 
-                                    type="text" 
-                                    name="dP" 
-                                    defaultValue={userDetails.dP}
-                                    onChange={e => setDp(e.target.value)}
                                 />
                             </div>
                             <div className="sixteen wide column" >

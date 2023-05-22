@@ -1,29 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
-// import {notify} from '../CustomStyling/index.js';
-import { useNavigate, Link } from "react-router-dom";
-import {useDispatch} from 'react-redux';
-import { bindActionCreators } from "redux";
-import { actionCreator } from "../../state/index.js";
-
-export const Deleteuser = (props) => {
+import {notify} from '../CustomStyling/notify.js';
+import { useNavigate, useParams } from "react-router-dom";
+export const Deleteuser = () => {
+    const {userId} = useParams();
+    const [userDetails, setUserDetails] = useState({})
+    const user = localStorage.getItem('user')
     const navigate = useNavigate();
-    const deleteConfirm = () => {
-        axios.delete(`http://localhost:3001/user/${props.userId.userId}/delete`)
-        .then((res)=>{
-            console.log(res.data.msg);
-            // notify(res.data.msg);
-        })
-        .catch(err => console.log(err))
-        navigate('/home')
+    useEffect(() => {
+        if(!user){
+            notify('You need to be logged in to do that!')
+            navigate('/login')
+        }else{
+
+            axios.get(`http://localhost:3001/user/${userId}`)
+            .then(res => {
+                setUserDetails(res.data)
+            })
+            .catch(err => console.log(err))   
+        }
+
+    }, []) 
+    const deleteUser = () => {
+        if(userDetails._id){
+            if(userDetails.email === JSON.parse(user).user.email){
+                axios.delete(`http://localhost:3001/user/${userId}/delete`)
+                .then((res)=>{
+                    localStorage.clear();
+                    axios.defaults.headers.common['Authorization'] = ``;
+                    navigate(0)
+                    notify(res.data.msg);
+                })
+                .catch(err => console.log(err))
+            }else{
+                notify('You are not authorized to access this route!')
+            }
+        }else{
+            notify('Fetching')
+        }
+        {navigate('/home')}
     }
-    return(
-        <div>
-            Delete page
-            {deleteConfirm()}
-            <div>
-                <Link to="/home"> Go back to HomePage</Link>
-            </div>
-        </div>
-    )
+    return(<>
+        {deleteUser()}
+    </>)
 }

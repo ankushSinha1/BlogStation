@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //stores the data in local machine for now
 dotenv.config();
 mongoose.connect(process.env.MONGO);
+
 app.use(cors({origin: true, credentials: true}));
 app.use('/user', userRoutes);
 app.use('/posts', postRoutes);

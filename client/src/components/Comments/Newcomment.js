@@ -1,8 +1,9 @@
 import axios from "axios"
 import React, {useEffect, useState} from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { notify } from "../CustomStyling/notify";
-export const Newcomment = (props) => {
+export const Newcomment = () => {
+    var {postId} = useParams()
     const navigate = useNavigate();
     const [text, setText] = useState('');
     const [authorDetails, setAuthorDetails] = useState({});
@@ -15,21 +16,58 @@ export const Newcomment = (props) => {
             .then((res) => {
                 setAuthorDetails(res.data)
             })
+            .catch(err=>console.log(err))
         }
+
     }, [])
     const onSubmit = (e) => {
-        let newComment = {
-            text: text,
-            author: authorDetails,
-            postId: props.postId,
-            likes: 0,
-            totalReports: 0,
+        e.preventDefault()
+        if(!user){
+            notify('You need to be logged in to do that!')
+            navigate('/login')
         }
-        axios.post(`http://localhost:3001/posts/${props.postId}/comment/new`, newComment)
-        .then(res => {
+        else{
+
+            let newComment = {
+                text: text,
+                author: authorDetails,
+                postId: postId,
+                likes: 0,
+                totalReports: 0,
+            }
+            axios.post(`http://localhost:3001/posts/${postId}/comment/new`, newComment)
+            .then(res => {
+                if(res.data.msg === 'Token expired!'){
+                notify('Id expired.')
+                axios.post('http://localhost:3001/refToken', JSON.parse(user))
+                .then(data => {
+                    //if reftoken is also expired
+                    if(data.data.msg === 'RefToken expired'){
+                        axios.post('http://localhost:3001/deleteRefToken', JSON.parse(user))
+                        .then(data => console.log(data))
+                        .catch(err => console.log(err))
+                        notify('Error occurred. Login required')
+                        navigate('/login')
+                    }else{
+                        //if reftoken is intact
+                        localStorage.clear()
+                        localStorage.setItem('user', JSON.stringify(data.data))
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
+                        navigate('/home')
+                        notify('New Id registered!')
+                        notify("Could not add your comment. Try again.")
+                    }
+                })
+                .catch(err => console.log(err))
+            }else{
+                //if access token is intact
+                notify('Comment added!')
+                navigate(0)
+            }
         })
         .catch(err => console.log(err));
         setText('')
+        }
     }
     return(
         <div>
@@ -38,14 +76,14 @@ export const Newcomment = (props) => {
                 <div className="ui segments">
                     <div className="ui segment">
                     <textarea
-                        rows="5"
+                        rows="6"
                         type="text" 
                         placeholder="Comment" 
                         value={text} 
                         onChange={e => setText(e.target.value)} 
                         required
-                        />
-                        <p></p>
+                    />
+                    <p></p>
                     <input type="submit" className="ui button primary"/>
                     </div>
                 </div>

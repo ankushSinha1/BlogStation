@@ -19,31 +19,7 @@ import { ToastContainer } from 'react-toastify';
 import '../node_modules/react-toastify/dist/ReactToastify.css';
 
 function App() {
-  let DisplayUser = () => {
-    const {userId} = useParams();
-    return <Showuser userId={{userId}}/>
-  }
-  let UpdateUser = () => {
-    const {userId} = useParams();
-    return <Edituser userId={{userId}} />
-  }
-  let DeleteUser = () => {
-    const {userId} = useParams();
-    return <Deleteuser userId={{userId}}/>
-  }
-  let DisplayPost =() => {
-    const {postId} = useParams();
-    return <Showpost postId={{postId}}/>
-  }
-  let UpdatePost =() => {
-    const {postId} = useParams();
-    return <Editpost postId={{postId}}/>
-  }
-  let DeletePost = () => {
-    const {postId} = useParams();
-    return <Deletepost postId = {{postId}}/>
-  }
-  
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -51,14 +27,14 @@ function App() {
         <Routes>
           <Route path='/' element={Welcomepage()}/>
           <Route path='/home' element={<Homepage/>}/>
-          <Route path='/user/:userId' element={<DisplayUser/>}/>
+          <Route path='/user/:userId' element={<Showuser/>}/>
           <Route path='/user/new' element={<Newuser/>}/>
-          <Route path='/user/:userId/edit' element={<UpdateUser/>}/>
-          <Route path='/user/:userId/delete' element={<DeleteUser/>}/>
-          <Route path='/posts/:postId' element={<DisplayPost/>}/>
+          <Route path='/user/:userId/edit' element={<Edituser/>}/>
+          <Route path='/user/:userId/delete' element={<Deleteuser />}/>
+          <Route path='/posts/:postId' element={<Showpost/>}/>
           <Route path='/posts/new' element={<Newpost/>}/>
-          <Route path='/posts/:postId/edit' element={<UpdatePost/>}/>
-          <Route path='/posts/:postId/delete' element={<DeletePost/>}/>
+          <Route path='/posts/:postId/edit' element={<Editpost/>}/>
+          <Route path='/posts/:postId/delete' element={<Deletepost/>}/>
           <Route path='/posts/:postId/comment/:commentId/edit' element={<Editcomment/>}/>
           <Route path='/login' element={<Login/>}/>
           <Route path='/register' element={Register()}/>

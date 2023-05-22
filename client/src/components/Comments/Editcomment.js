@@ -1,30 +1,32 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {notify} from '../CustomStyling/notify'
 export const Editcomment = () => {
+    const {postId} = useParams()
+    const {commentId} = useParams()
     let navigate = useNavigate()
-    const {state} = useLocation();
     const [text, setText] = useState('');
     const [commentDetails, setCommentDetails] = useState({});
-    const {postId} = state;
-    const {commentId} = state;
+    
     useEffect(() => {
         axios.get(`http://localhost:3001/posts/${postId}/comment/${commentId}`)
         .then((res) => setCommentDetails(res.data))
         .catch(err => console.log(err))
     }, [])
-    const onSubmit = () => {
+    const onSubmit = (e) => {
+        e.preventDefault()
         const updatedComment = {
             text: text,
-            author: '',
+            author: commentDetails.author,
             likes: 0,
             totalReports: 0,
             postId: postId, 
         }
         axios.patch(`http://localhost:3001/posts/${postId}/comment/${commentId}/update`, updatedComment)
         .then((res) => {
-            console.log("Comment updated");
-            navigate(-1)    
+            notify(res.data.msg)
+            navigate(`/posts/${postId}`)  
         })
         .catch((err) => console.log(err))
     }
@@ -38,7 +40,7 @@ export const Editcomment = () => {
             </center>
             <p></p>
             <div className="ui container">
-                <form className="ui form" onSubmit={onSubmit}>
+                <form className="ui form" onSubmit={e=>onSubmit(e)}>
                     <div className="field" style={{marginLeft: '5%', marginRight: '5%'}}>
                         <div className="ui segments">
                             <div className="ui segment">

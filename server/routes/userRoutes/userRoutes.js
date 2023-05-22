@@ -1,38 +1,36 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import path from "path";
 import jwt from "jsonwebtoken";
 const router = express.Router();
-import multer from "multer";
 import User from "../../models/User.js";
+import RefToken from "../../models/refToken.js";
 import { protect } from "../../middleware/index.js";
-const tokenList = [];
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "../../public/assets");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
-let upload = multer({ storage: storage, dest: "../../public/assets" });
-//A function that generates a token
-const tokenGen = (data) => {
-  return jwt.sign({ data }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "1h",
-  });
+import cloudinary from 'cloudinary';
+import Post from "../../models/Post.js";
+cloudinary.config({
+  cloud_name: 'dvstzyogy',
+  api_key: '544918322574147',
+  api_secret: 'WJv1374MZiWj1W-_zUMnxPAfir4',
+});  
+const opts = {
+  overwrite: true,
+  invalidate: true,
+  resource_type: "auto",
 };
-//A function that generates a refresh token
-
+router.route('/uploadImage').post(async (req, res)  => {
+  await cloudinary.v2.uploader.upload_large(req.body.myPict, opts)
+  .then(result => {return res.json(result)})
+  .catch(err => {return res.json(err)})
+})
+const tokenGen = (data) => {
+  return jwt.sign({ data }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "2h",});
+};
 const refreshTokenGen = (data) => {
-  return jwt.sign({ data }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "3h",
-  });
+  return jwt.sign({ data }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "2d"});
 };
 //CREATE
-router.route("/new").post(upload.single("dP"), async (req, res) => {
-  console.log(req.file);
-  // const dP = req.file.filename;
+router.route("/new").post(async (req, res) => {
+
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (user) {
@@ -41,7 +39,6 @@ router.route("/new").post(upload.single("dP"), async (req, res) => {
   //Hashing the inputted password by the user and replacing it with original one and then storing in database
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   req.body.password = hashedPassword;
-  // req.body.dP = dP;
   const newUser = new User(req.body);
   newUser.save();
   const refToken = refreshTokenGen(newUser);
@@ -51,46 +48,57 @@ router.route("/new").post(upload.single("dP"), async (req, res) => {
     refToken: refToken,
     msg: "Welcome to BlogStation!!",
   };
-  tokenList[refToken] = response;
+  let newRefToken = new RefToken({refToken: refToken})
+  newRefToken.save();
   try {
     return res.json(response);
   } catch (err) {
-    return res.json(err);
+    return res.json(err.toString());
   }
 });
 //READ
-router.route('/:userId').get( (req, res) => {
-  User.findById(req.params.userId).then((data) => {
-    return res.status(200).json(data);
-  });
+router.route('/:userId').get((req, res) => {
+  User.findById(req.params.userId)
+  .then((data) => {
+    return res.json(data);
+  })
+  .catch(err => {
+    return res.json({err: err.toString()})
+  })
 });
 
 //UPDATE
-router.get("/:userId/edit", protect, (req, res) => {
-  User.findById(req.params.userId).then((data) => {
+router.route("/:userId/edit").get(protect, (req, res) => {
+  if(req.status && req.status.msg === 'Token expired!'){
+    return res.json(req.status)
+  }
+  User.findById(req.params.userId)
+  .then((data) => {
     return res.json(data);
-  });
+  })
+  .catch(err => {return res.json({err: err.toString()})})
 });
 router.route("/:userId/update").patch((req, res) => {
-  //$set attribute is an update operator in mongodb. It sets the specified values(req.body) in the model whose id is
-  // given as the first parameter in the findByIdAndUpdate method
-  User.findByIdAndUpdate(req.params.userId, { $set: req.body }).then(
-    (error, data) => {
-      if (error) {
-        console.log(error);
-      }
-      return res.status(200).json({ data: data, msg: "User details updated!" });
-    }
-  );
-});
-
+  // Post.findOneAndUpdate({'author._id': req.params.userId}, {$set: {'author': req.body}})
+  // .then(data => console.log('Updated'))
+  // .catch(err => console.log(err))
+  User.findByIdAndUpdate(req.params.userId, { $set: req.body })
+  .then(data => { 
+    return res.json({data, msg: "User details updated!" });
+  })
+  .catch(err => {return res.json({msg: err.toString()})})
+})
 //DELETE
-router.route("/:userId/delete").delete((req, res) => {
-  User.findByIdAndRemove(req.params.userId).then((error, data) => {
-    if (error) {
-      return res.json(error);
-    }
-    return res.status(200).json({ msg: "User deleted!" });
-  });
+router.route("/:userId/delete").delete(protect, (req, res) => {
+  if(req.status && req.status.msg === 'Token expired!'){
+    return res.json(req.status)
+  }
+  User.findByIdAndRemove(req.params.userId)
+  .then((data) => {
+    return res.json({data, msg: "User deleted!" });
+  })
+  .catch(err => {
+    return res.json({err: err.toString()})
+  })
 });
 export default router;

@@ -16,6 +16,9 @@ export const Navbar = () => {
         }
     }, [])
     const Logout = async () => {        
+        axios.post('http://localhost:3001/deleteRefToken', JSON.parse(user))
+        .then(data => console.log(data.msg))
+        .catch(err => console.log(err))
         localStorage.clear()
         axios.defaults.headers.common['Authorization'] = '';
         setIsLoggedIn(false)

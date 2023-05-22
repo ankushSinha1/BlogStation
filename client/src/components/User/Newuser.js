@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,17 +9,17 @@ import {actionCreator} from '../../state/index.js';
 import {notify} from '../CustomStyling/notify.js';
 export const Newuser = () => {
     const navigate = useNavigate();
-    let [msg, setMsg] = useState('');
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
     const [age, setAge] = useState(0)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [dP, setDp] = useState("")
+    const [dP, setDp] = useState({myPict: ''})
     const [bio, setBio] = useState('')
-    const [following] = useState(0)
-    const [followers] = useState(0)
+
+    // useEffect(()=>{
+    // })a
     const onChangeFirstName = (e) => {
         setFirstName(e.target.value)
     }
@@ -42,12 +42,26 @@ export const Newuser = () => {
         setPassword(e.target.value)
 
     }
-    const onChangeDp = (e) => {
-        setDp(e.target.value);
+    const onChangeDp = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convToBase64(file);
+        setDp({myPict: base64})
     }
     const onChangeBio = (e) => {
         setBio(e.target.value)
 
+    }
+    const convToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader()
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => {
+                resolve(fileReader.result)
+            }
+            fileReader.onerror = (error) =>{
+                reject(error)
+            }
+        })
     }
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -58,11 +72,18 @@ export const Newuser = () => {
             age: age,
             email: email,
             password: password,
-            dP: dP,
+            dP: dP.myPict,
             bio: bio,
-            following: following,
-            followers: followers,
+            following: 0,
+            followers: 0,
         };
+        //For uploading image on cloudinary
+        await axios.post('http://localhost:3001/posts/uploadImage', dP)
+        .then(res => {
+            newUser.dP = res.data.secure_url
+        })
+        .catch(err => console.log(err))
+        //For creating new user
         axios.post('http://localhost:3001/user/new', newUser)
         .then((res) => {
             localStorage.setItem('user', JSON.stringify(res.data))
@@ -76,7 +97,7 @@ export const Newuser = () => {
         setAge(0)
         setEmail('')
         setPassword('')
-        setDp('')
+        setDp({myPict: ''})
         setBio('')
         navigate(`/home`)
         notify('Welcome to BlogStation')
@@ -158,10 +179,11 @@ export const Newuser = () => {
                             <div className="field column" >
                                 <label>Profile picture</label>
                                 <input 
-                                    type="text" 
+                                    type="file" 
                                     name="dP"
-                                    value={dP} 
-                                    onChange={onChangeDp}
+                                    accept='.png, .jpg, .jpeg'
+
+                                    onChange={e => onChangeDp(e)}
                                 />
                             </div>
                             <div className="field column" >

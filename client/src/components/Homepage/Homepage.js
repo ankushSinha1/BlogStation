@@ -1,20 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {useEffect, useState} from 'react';
+import {monthNumToName} from '../Controllers/monthNumToName'
 export const Homepage = () => {
+    const navigate = useNavigate()
     const [allPosts, setAllPosts] = useState([]);
-    const [user, setUser] = useState(localStorage.getItem('user'));
+    const user = localStorage.getItem('user')
     useEffect( () => {
-         // var isExpiredToken = false;
-            // var dateNow = new Date();
-            // if(decoded.exp < dateNow.getTime()/1000){
-            //     isExpiredToken = true;
-            // }
-            //Get user from the token
-            // if(isExpiredToken){
-            //     axios.post('http://localhost:3001/token')
-            // }
         if(user){
             axios.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(user).token}`;
         }
@@ -56,15 +49,48 @@ export const Homepage = () => {
             array.map(post => {
                 const date = new Date(post.updatedAt);
                 //MONTHS
-                {monthNumberToName(date)};
+                {monthNumToName(date)};
                 return(
-                    <div key={post._id} className="ui card">
-                        <img src = {post.picture} alt = 'No picture provided'/>
-                        <h3>{post.title}</h3>
-                        <p>{post.author}</p>
-                        <Link to={`/posts/${post._id}`}>Show more</Link>
-                        <br></br>
+                    <div className="ui card" key={post._id} style={{margin: '2%', height: '30%', width: '30%'}}>
+                        <div className="content">
+                            <img 
+                                className="ui avatar image" 
+                                src={post.author.dP}  
+                                onClick={()=>{navigate(`/user/${post.author._id}`)}}
+                                style={{cursor: 'pointer'}}
+                            />
+                            <span 
+                                onClick={()=>{navigate(`/user/${post.author._id}`)}}
+                                style={{cursor: 'pointer'}}
+                            >
+                                {post.author.username}
+                            </span>
+                        </div>
+                        <div  onClick={()=>navigate(`/posts/${post._id}`)} style={{cursor: 'pointer', margin: '2%'}}>
+                        <h4>{post.title}</h4>
+                        </div>
+
+                        <div className="image" onClick={()=>navigate(`/posts/${post._id}`)} style={{cursor: 'pointer'}}>
+                            <img src={post.picture}/>
+                        </div>
+                        <div className="content">
+                            <span className='left floated'>
+                                <i className="red heart outline link icon"></i>
+                                {post.likes}    
+                            </span>
+                            <span className="right floated">
+                                <i className="red flag outline link icon"></i>
+                                {post.totalReports}
+                            </span>
+                        </div>
                     </div>
+                    // <div key={post._id} className="ui card">
+                    //     <img src = {post.picture} alt = 'No picture provided'/>
+                    //     <h3>{post.title}</h3>
+                    //     <p>{post.author.firstName} {post.author.lastName}</p>
+                    //     <Link to={`/posts/${post._id}`}>Show more</Link>
+                    //     <br></br>
+                    // </div>
                 )
             })
         )
