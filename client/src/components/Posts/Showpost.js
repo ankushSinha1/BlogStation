@@ -56,11 +56,15 @@ export const Showpost = () => {
         if(user && `${JSON.parse(user).user.username}` === postDetails.author.username){
             return (
                 <div style={{margin: '10px'}}>
-                    <Link to={`/posts/${postId}/edit`} className="ui button primary">Edit post</Link>
+                    <Link to={`/posts/${postId}/edit`} className="ui button primary">
+                        Edit post
+                    </Link>
                     <Link to={`/posts/${postId}/delete`} className="ui button negative"
                         style={{
                             float: 'right'
-                        }}>Delete post</Link>
+                        }}>
+                        Delete post
+                    </Link>
                 </div>
             )
         }
@@ -137,7 +141,7 @@ export const Showpost = () => {
         }else{
             return (
                 <>
-                <div>No comments yet!</div>
+                <div style={{marginLeft: '30px'}}>No comments yet!</div>
                 <div style={{backgroundColor: '#e5e5e5', height: '1px', margin: '25px'}}></div>
                 </>
             )
@@ -154,7 +158,8 @@ export const Showpost = () => {
                     marginRight: '50%', 
                     padding: '1%', 
                     background: 'white',
-                    minWidth: '500px'
+                    minWidth: '500px',
+                    borderRadius: '10px'
                 }} >
                     <h2>{postDetails.title}</h2>
                     <div style={{height:'100%', width: '100%'}}>

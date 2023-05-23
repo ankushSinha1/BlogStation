@@ -26,7 +26,7 @@ function App() {
         <Navbar/>
         <div className='container' style={{padding: '1%'}}>
         <Routes>
-          <Route path='/' element={Welcomepage()}/>
+          <Route path='/' element={<Welcomepage/>}/>
           <Route path='/home' element={<Homepage/>}/>
           <Route path='/user/:userId' element={<Showuser/>}/>
           <Route path='/user/new' element={<Newuser/>}/>
