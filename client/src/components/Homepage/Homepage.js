@@ -23,9 +23,9 @@ export const Homepage = () => {
                     //MONTHS
                     {monthNumToName(date)};
                     return(
-                        // <div className='container' style={{padding: '10px'}}>
-                            <div className="ui card raised link" key={post._id} >
-                            <div className="content">
+                        <div className='column' style={{padding: '4%'}}>
+                            <div className="ui segment card raised" key={post._id} style={{width: '100%'}}>
+                            <div className="content" style={{width: '100%', height: '100%'}}>
                                 <img 
                                     className="ui avatar image middle aligned" 
                                     src={post.author.dP}  
@@ -46,14 +46,14 @@ export const Homepage = () => {
                             <h4>{post.title}</h4>
                             </div>
 
-                            <div className="image " onClick={()=>navigate(`/posts/${post._id}`)} style={{cursor: 'pointer', width: '100%'}}>
-                                <img src={post.picture} style={{opacity: '85%'}}/>
+                            <div className="image " onClick={()=>navigate(`/posts/${post._id}`)} style={{cursor: 'poi   nter'}}>
+                                <img src={post.picture} style={{opacity: '85%', cursor: 'pointer'}} className='responsive  '/>
                             </div>
                             <div className="content">
-                                <div class="description">
-                                    {post.description.slice(0, 70)}...
+                                <div class="description" style={{cursor: 'pointer'}} onClick={()=>navigate(`/posts/${post._id}`)}>
+                                    {post.description.slice(0, 50)}...
                                 </div>
-                                <div style={{padding: '10px'}}>
+                                <div style={{padding: '6%'}}>
                                 </div>
                                     <span className='left floated'>
                                         <i className="red heart outline link icon"></i>
@@ -64,7 +64,7 @@ export const Homepage = () => {
                                         {post.totalReports}
                                     </span>
                             </div>
-                        {/* </div> */}
+                        </div>
                     </div>
                 )
             })
@@ -83,7 +83,7 @@ export const Homepage = () => {
         }
     }
     return(
-        <div>
+        <div className='ui three column doubling grid' >
             {displayAllPosts(allPosts)}
         </div>
     )

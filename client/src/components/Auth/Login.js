@@ -9,36 +9,48 @@ import { notify } from '../CustomStyling/notify.js';
 
 export const Login = () => {
     const navigate = useNavigate();
-    
+    const user = localStorage.getItem('user');
     const dispatch = useDispatch();
     const actions = bindActionCreators(actionCreator, dispatch);
     const [email, setemail] = useState('');
     const [password, setPassword] = useState('');
-
+    useEffect(()=>{
+        if(user){
+            notify('Someone is already logged in!')
+            navigate('/home')
+        }
+    }, [])
     const onSubmit = async (e) => {
         e.preventDefault();
         const loginData = {
             email: email,
             password: password
         }
-        axios.post('http://localhost:3001/login', loginData)
-        .then((res) => {
-            if(res.data.token){
-                //Sets the authorization parameter in req.headers
-                localStorage.setItem('user', JSON.stringify(res.data))
-                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-                navigate('/home');
-                navigate(0)
-                notify(res.data.msg)
-            }else{
-                notify(res.data.msg)
-            }
-        })
-        .catch((err) => console.log(err));
+        if(user && email === JSON.parse(user).user.email){
+            notify('You are already logged in')
+            navigate('/home')
+        }else{
+
+            axios.post('http://localhost:3001/login', loginData)
+            .then((res) => {
+                if(res.data.token){
+                    //Sets the authorization parameter in req.headers
+                    localStorage.setItem('user', JSON.stringify(res.data))
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+                    navigate('/home');
+                    navigate(0)
+                    notify(res.data.msg)
+                }else{
+                    notify(res.data.msg)
+                    navigate('/login')
+                }
+            })
+            .catch((err) => console.log(err));
+        }
     }
-    return(
-        <div 
-        style={{minWidth: '500px'}}>
+        return(
+            <div 
+            style={{minWidth: '500px'}}>
             <form className="ui form" onSubmit={onSubmit} 
                 style={{
                         margin: 'auto',
@@ -56,7 +68,7 @@ export const Login = () => {
                         opacity: '90%'
                         
                     }}>
-                        <h1 className="ui center aligned header">Login</h1>
+                        <h1 className="ui center aligned header">Login to your account</h1>
                         <div className="field column" >
                             <label>Email</label>
                             <input 
@@ -77,11 +89,12 @@ export const Login = () => {
                                 onChange={e=>setPassword(e.target.value)}
                             />
                         </div>                            
-                        <div style={{alignItems: "center", display: 'inline'}}>
+                        <div style={{alignItems: "center", display: 'inline'}} >
                             <input 
                                 type="submit" 
                                 placeholder="Submit" 
                                 className="ui positive button fluid"
+                                id='submit'
                             />
 
                         </div>

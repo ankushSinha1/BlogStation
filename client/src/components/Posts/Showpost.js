@@ -31,30 +31,37 @@ export const Showpost = () => {
     const authForEditAndDeleteComment = (comment) => {
         if(user && JSON.parse(user).user._id === comment.author._id){
             return (
-                <>
-                <Link 
-                    to={`/posts/${postId}/comment/${comment._id}/edit`} 
-                    className="mini ui primary button"
-                >
-                    Edit
+                <div style={{margin: '10px 0px 10px 0px'}}>
+                <Link to={`/posts/${postId}/comment/${comment._id}/edit`} 
+                    style={{
+                        marginRight: '20%',
+                    }} 
+                    className="tiny ui primary button"
+                    >
+                    Edit this comment
                 </Link>
-                <button 
-                    onClick={() => {deleteComment(comment);}} 
-                    className="mini ui red button"
+                <button onClick={() => {deleteComment(comment);}} 
+                    className="tiny ui red button" 
+                    style={{
+                        float: 'right'
+                    }}
                 >
-                    Delete
+                    Remove this comment
                 </button> 
-                </>
+                </div>
             )
         }
     }
     const authForEditAndDeletePost = () => {
         if(user && `${JSON.parse(user).user.username}` === postDetails.author.username){
             return (
-                <>
-                    <Link to={`/posts/${postId}/edit`} className="ui button primary">Edit</Link>
-                    <Link to={`/posts/${postId}/delete`} className="ui button red">Delete</Link>
-                </>
+                <div style={{margin: '10px'}}>
+                    <Link to={`/posts/${postId}/edit`} className="ui button primary">Edit post</Link>
+                    <Link to={`/posts/${postId}/delete`} className="ui button negative"
+                        style={{
+                            float: 'right'
+                        }}>Delete post</Link>
+                </div>
             )
         }
     }
@@ -76,40 +83,53 @@ export const Showpost = () => {
                     let commentDate = new Date(comment.updatedAt);
                     commentDate = monthNumToName(commentDate)
                     return (
-                        <div className="ui comments" key={comment._id}>
+                        <div className="ui comments" key={comment._id} style={{ maxWidth: '100%', padding: '25px'}}>
                             <div className="comment">
                                 <img 
                                     src={comment.author.dP} 
                                     alt="err" 
                                     className="avatar" 
-                                    style={{height: '55px', width: '55px', borderRadius: '8px'}} 
+                                    style={{height: '50px', width: '50px', borderRadius: '15px', cursor: 'pointer'}} 
                                     onClick={()=>(navigate(`/user/${comment.author._id}`))}
                                 />
-                                <div className="content">
-                                    <div className="metadata">
-                                        <a className="author" href={`/user/${comment.author._id}`}>
+                                <div className="content" style={{}}>
+                                    <div className="metadata" style={{width: '98%'}}>
+                                        <Link className="author" to={`/user/${comment.author._id}`} style={{}}>
                                             {comment.author.firstName} {comment.author.lastName}
-                                        </a>
+                                        </Link>
                                         <div className="date">
-                                            <div style={{fontSize: "12px"}}>
-                                                {commentDate.getFullYear()}, 
-                                                {commentDate.month} {commentDate.getDate()} at {commentDate.getHours()}:{commentDate.getMinutes()}
+                                            <div style={{fontSize: "12px",}}>
+                                                {commentDate.month} {commentDate.getDate()},  {commentDate.getFullYear()} 
+
                                             </div>
                                         </div>
                                         <br></br>
-                                        <div className="text">{comment.text}</div>
-                                        <br></br>
-                                        <div className="rating">
-                                            <i className = "heart icon" alt="err">{comment.likes}</i>
+                                        <div 
+                                            className="text" 
+                                            style={{
+                                                width: '100%'
+                                            }}
+                                        >
+                                            {comment.text}
                                         </div>
-                                        <div className="rating">
-                                            <i className = "flag icon" alt="err">{comment.totalReports}</i>
+                                        <br></br>
+                                        <div style={{margin: '2px'}}>
+                                            <div className=''  style={{ display: 'inline'}}>
+                                                <i className="red heart outline link icon"></i>
+                                                    {postDetails.likes} Likes
+                                            </div>
+                                            <div className="" style={{ display: 'inline',  position: 'absolute', right: '0px'}}>
+                                                <i className="red flag outline link icon" ></i>
+                                                    {postDetails.totalReports} Reports
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             {authForEditAndDeleteComment(comment)}
-                            <hr></hr>
+                            <div style={{backgroundColor: '#e5e5e5', height: '1px', margin: '25px'}}></div>
+
                         </div>
                     )
                 })
@@ -118,7 +138,7 @@ export const Showpost = () => {
             return (
                 <>
                 <div>No comments yet!</div>
-                <hr></hr>
+                <div style={{backgroundColor: '#e5e5e5', height: '1px', margin: '25px'}}></div>
                 </>
             )
         }
@@ -128,20 +148,56 @@ export const Showpost = () => {
     {monthNumToName(date)};
     if(postDetails.author){
         return(
-            <div>
-                <div className="container" style={{marginLeft: '10%', marginRight: '10%'}}>
+                <div className="ui container" 
+                style={{
+                    marginLeft: '50%', 
+                    marginRight: '50%', 
+                    padding: '1%', 
+                    background: 'white',
+                    minWidth: '500px'
+                }} >
                     <h2>{postDetails.title}</h2>
-                    <img src={postDetails.picture} style={{width: "50%"}} alt="NaN"/>
-                    <div className="rating">
-                        <i className = "heart icon" alt="err" style={{display: 'inline', transform: {scale: '2'}}}/>{postDetails.likes}{' '}
-                        <i className = "flag icon" alt="err" style={{display: 'inline'}}/>{postDetails.totalReports}{' '}
+                    <div style={{height:'100%', width: '100%'}}>
+                        <img src={postDetails.picture} style={{ maxWidth: "100%", height: '100%', width: '100%'}} alt="NaN"/>
                     </div>
-                    <div>Posted by- "{postDetails.author.firstName} {postDetails.author.lastName}"</div>
-                    <div>Posted at: {date.getFullYear()}, {date.month} {date.getDate()} at {date.getHours()}:{date.getMinutes()} IST</div>
-                    <hr></hr>
-                    <p>"{postDetails.description}"</p>
+                    <br></br>
+                    <div style={{margin: '10px 0px 10px 0px'}}>
+
+                        <div className=''  style={{ display: 'inline'}}>
+                            <i className="red heart outline link icon"></i>
+                                {postDetails.likes} Likes
+                        </div>
+                        <div className="" style={{ display: 'inline', float: 'right'}}>
+                            <i className="red flag outline link icon" ></i>
+                                {postDetails.totalReports} Reports
+                        </div>
+                    </div>
+                    <div style={{margin: '10px 0px 10px 0px'}}>
+                        <div style={{display: 'inline'}}>
+                            <Link to={`/user/${postDetails.author._id}`} 
+                                    style={{
+                                        color: 'black',
+                                        fontWeight: '700',
+                                        // fontSize: '5px'
+                                    }}
+                                >
+                                    {postDetails.author.firstName} {postDetails.author.lastName}
+                                </Link>
+                        </div>
+                        <div style={{float: 'right', display: 'inline', right: '0px'}}>
+                            {date.month} {date.getDate()}, {date.getFullYear()}
+                        </div>
+                    </div>
+                    <div style={{height: '20px'}}></div>
+
+                    <p style={{
+                        margin: '0px 0px 35px 0px'
+                    }}>
+                        "{postDetails.description}"
+                    </p>
                     {authForEditAndDeletePost()}
-                    <hr></hr>
+                    <div style={{backgroundColor: '#e5e5e5', height: '1px', margin: '30px'}}></div>
+
                     <div>
                         {allComments()}
                     </div>
@@ -151,9 +207,8 @@ export const Showpost = () => {
                         </div>
                     </div>
                 </div>
-            </div>
         )
     }else{
-        <div>ASDJLAKSDLKA</div>
+        <div>Loading...</div>
     }
 }

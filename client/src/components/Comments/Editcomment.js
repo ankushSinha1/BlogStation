@@ -30,18 +30,30 @@ export const Editcomment = () => {
         })
         .catch((err) => console.log(err))
     }
-    const cancel = () => {
-        navigate(-1)
-    }
     return(
         <div>
             <center>
-                <h2>Edit your comment</h2>
             </center>
             <p></p>
             <div className="ui container">
-                <form className="ui form" onSubmit={e=>onSubmit(e)}>
-                    <div className="field" style={{marginLeft: '5%', marginRight: '5%'}}>
+                <form className="ui form" onSubmit={e=>onSubmit(e)} style={{
+                // margin: 'auto',
+                // width: '100%',
+                minWidth: '500px',
+                background: 'white'
+                
+            }}>
+                    <div className="field" style={{
+                        // marginLeft: '15%',
+                        // marginRight: '15%',
+                        width: '80%',
+                        border: '15px solid white',
+                        borderRadius: '4px',
+                        margin: 'auto',
+                        background: 'white',
+                        opacity: '90%'
+                    }}>
+                        <h2 className="ui center aligned header">Edit your comment</h2>
                         <div className="ui segments">
                             <div className="ui segment">
                                 <textarea
@@ -52,8 +64,33 @@ export const Editcomment = () => {
                                     required
                                     />
                                 <p></p>
-                                <input type="submit" className="ui button primary"/>
-                                <button type="button" className="ui button red" onClick={cancel}>Cancel</button>
+                                <div className='ui footer' 
+                                style={{
+                                    width: '96%',
+                                    margin: 'auto',
+                                    alignItems: "center"
+                                }}>
+                                <div style={{}} >
+                                    <input 
+                                        type="submit" 
+                                        placeholder="Submit post" 
+                                        className="ui positive button fluid "
+                                        id='submit'
+                                        />
+                                </div>
+                                <div style={{height: '10px'}}></div>
+                                {/* <br></br> */}
+                                <button 
+                                    className="ui button red fluid"
+                                    onClick={() => {navigate(-1)}}
+                                    >
+                                    Cancel
+                                </button>
+                                <div style={{margin: '10px 0px 0px 0px'}}>
+                                </div>
+                            </div> 
+                                {/* <input type="submit" className="ui button primary"/>
+                                <button type="button" className="ui button red" onClick={cancel}>Cancel</button> */}
                             </div>
                         </div>
                     </div>

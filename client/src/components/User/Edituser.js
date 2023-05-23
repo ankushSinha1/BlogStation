@@ -61,6 +61,8 @@ export const Edituser= () =>{
 
     }, [])
     const onChangeDp = async(e) => {
+        setDp({myPict: ''})
+
         const file = e.target.files[0]
         const base64 = await convToBase64(file)
         setDp({myPict: base64})
@@ -91,94 +93,154 @@ export const Edituser= () =>{
             following: userDetails.following,
             followers: userDetails.followers,
         }
-        if(dP.myPict){
+        if(!dP.myPict){
+            notify('No image was given. Please upload an image')
+        }else{
+
             await axios.post('http://localhost:3001/user/uploadImage', dP)
             .then(res => {updatedUser.dP = res.data.secure_url})
             .catch(err => console.log(err))
+            await axios.patch(`http://localhost:3001/user/${userId}/update`, updatedUser)
+            .then((res)=>{
+                notify(res.data.msg)
+            })
+            .catch((error) => {console.log(error)});
+            setFirstName('')
+            setLastName('')
+            setUsername('')
+            setAge(0)
+            setEmail('')
+            setDp({myPict: ''})
+            setBio('')        
+            navigate(-1)
         }
-        await axios.patch(`http://localhost:3001/user/${userId}/update`, updatedUser)
-        .then((res)=>{
-            notify(res.data.msg)
-        })
-        .catch((error) => {console.log(error)});
-        setFirstName('')
-        setLastName('')
-        setUsername('')
-        setAge(0)
-        setEmail('')
-        setDp({myPict: ''})
-        setBio('')        
-        navigate(-1)
-
+            
     }
     const cancel = () => {
         navigate(`/user/${userDetails._id}`)
     }
-    const showImage = () => {
-        if(dP.myPict){
-            return dP.myPict
-        }else{
-            return userDetails.dP
-        }
-    }
     return(
         <div>
-            Edit form
-            <form className="ui form" onSubmit={onSubmit}>
-                <div>
-                    <div className="field" style={{marginLeft: '15%', marginRight: '15%'}}>
-                        <img src={showImage()} alt='NAN' className="ui medium circular image"/>
-                        <div>
-                            <label>Change profile picture</label>
+            <form className="ui form two column stackable grid" onSubmit={onSubmit} style={{
+                margin: 'auto',
+                width: '70%',
+                minWidth: '570px',
+            }}>
+                <div style={{
+                        // marginLeft: '15%',
+                        // marginRight: '15%',
+                        width: '80%',
+                        border: '15px solid white',
+                        borderRadius: '4px',
+                        // margin: 'auto',
+                        background: 'white',
+                        opacity: '90%'
+                    }}>
+                    <div className="field" >
+                        < h3 className="ui center aligned header" style={{margin: '2%'}}>Edit user details</h3>
+                        <div className="ui segment field column required"
+                            style={{
+                                maxHeight: '100%',
+                                height: '40%',
+                                padding: '10px',
+                                width: '100%',
+                                // marginTop: '30px',
+                                marginBottom: '33px',
+                                
+                            }}
+                            >
+                            <center>
+
+                            <img src={dP.myPict} alt='Selected image will be shown here' className='responsive'
+                                style={{
+                                    position: 'float',
+                                    maxHeight: '50%',
+                                    width: '50%',
+                                    overflow: 'auto',
+                                    border: '5px solid #f7f7f9',
+                                }}
+                                />
+                                </center>
+                            <center>
+                                {dP.myPict ? (
+                                    <button onClick={() => setDp({myPict: ''})}
+                                        className='ui button' 
+                                        style={{
+                                            marginTop: '55px',
+                                            marginLeft: 'auto',
+                                            marginRight: 'auto',
+                                            marginBottom:'15px',
+                                            padding: '10px',
+                                            width: 'auto',
+                                            cursor: 'pointer',
+                                        }}
+                                    > 
+                                        Remove image
+                                    </button>
+                                    ) : 
+                                    <>
+                                        <label for='IMAGE' className='ui button'
+                                            style={{
+                                                marginTop: '55px',
+                                                marginLeft: 'auto',
+                                                marginRight: 'auto',
+                                                marginBottom:'15px',
+                                                padding: '10px',
+                                                width: 'auto',
+                                                cursor: 'pointer',
+                                            }}
+                                            >
+                                            Upload an image*
+                                        </label>
+                                    </>
+                                }
+                            </center>
                             <input 
-                                type="file"
-                                name='dP'
+                                type="file" 
+                                name="dP"
+                                id='IMAGE'
                                 accept='.png, .jpg, .jpeg'
-                                onChange={(e)=>onChangeDp(e)}
-                            />
+                                required
+                                hidden={true}
+                                onChange={e => {onChangeDp(e)}}
+                                />
                         </div>
-                        <div className="ui two column grid" style={{margin: "10%", marginTop: "0%"}}>
-                            {/* <div className="field column" >
-                                <label>Profile picture</label>
-                                <input 
-                                    type="text" 
-                                    name="dP" 
-                                    defaultValue={userDetails.dP}
-                                    onChange={e => setDp(e.target.value)}
-                                />
-                            </div> */}
-                            <div className="field column" >
-                                <label>First Name *</label>
-                                <input 
-                                    type="text" 
-                                    name="firstName"
-                                    defaultValue={userDetails.firstName}
-                                    required
-                                    onChange={e => setFirstName(e.target.value)}
-                                />
+                        <div className="ui two column stackable grid" style={{margin: "4%", marginTop: "0%"}}>
+                                <div className="three column row">
+                            <div className=" column required field" >
+
+                                    <label>First Name</label>
+                                    <input 
+                                        type="text" 
+                                        name="firstName"
+                                        defaultValue={userDetails.firstName}
+                                        required
+                                        onChange={e => setFirstName(e.target.value)}
+                                        />
+                                </div>
+                                <div className=" column required field">
+                                    <label>Last Name</label>
+                                    <input 
+                                        type="text" 
+                                        name="lastName" 
+                                        defaultValue={userDetails.lastName}
+                                        required
+                                        onChange={e => setLastName(e.target.value)}  
+                                        />
+                                </div>
+                                <div className="required field column" >
+                                    <label>Username</label>
+                                    <input 
+                                        type="text" 
+                                        name="userName" 
+                                        defaultValue={userDetails.username}
+                                        required 
+                                        onChange={e => setUsername(e.target.value)}
+                                        />
+                                </div>
                             </div>
-                            <div className="field column">
-                                <label>Last Name *</label>
-                                <input 
-                                    type="text" 
-                                    name="lastName" 
-                                    defaultValue={userDetails.lastName}
-                                    required
-                                    onChange={e => setLastName(e.target.value)}  
-                                />
-                            </div>
-                            <div className="field column" >
-                                <label>Username *</label>
-                                <input 
-                                    type="text" 
-                                    name="userName" 
-                                    defaultValue={userDetails.username}
-                                    required 
-                                    onChange={e => setUsername(e.target.value)}
-                                />
-                            </div>
-                            <div className="field column">
-                                <label>Age *</label>
+                            <div className="required field column">
+                                <label>Age</label>
                                 <input 
                                     type="number" 
                                     name="age" 
@@ -187,8 +249,8 @@ export const Edituser= () =>{
                                     onChange={e => setAge(e.target.value)} 
                                 />
                             </div>
-                            <div className="field column" >
-                                <label>Email *</label>
+                            <div className="required field column" >
+                                <label>Email</label>
                                 <input 
                                     type="email" 
                                     name="email" 
@@ -197,26 +259,62 @@ export const Edituser= () =>{
                                     onChange={e => setEmail(e.target.value)}
                                 />
                             </div>
-                            <div className="sixteen wide column" >
-                                <label><b>About</b></label>
-                                <textarea 
-                                    rows="3" 
-                                    cols="4"
-                                    defaultValue={userDetails.bio}
-                                    name="bio"
-                                    onChange={e => setBio(e.target.value)}
-                                ></textarea>
-                            </div>
-                            <div style={{alignItems: "center"}}>
-                                <input 
-                                    type="submit"  
-                                    className="ui blue button"
-                                    placeholder='Submit'
-                                />
-                                <button className="ui button red" onClick={cancel}>
+                            <div className="two column row" >
+                                    <div  style={{
+                                            // position: 'sticky',
+                                            // margin: '10px',
+                                            left: '0px',
+                                            display: 'block ',
+                                            width: '100%',
+                                            // fontStyle: 'strong'
+                                            // margnTop: '100px'
+                                        }}
+                                        className='field required'>
+                                            <label for='bio' ><b>About</b></label>
+                                    </div>
+                                    {/* <div style={{height: '24px'}}></div> */}
+                                    <textarea 
+                                        required
+                                        rows="6" 
+                                        cols="4" 
+                                        defaultValue={userDetails.bio}
+                                        id='bio'
+                                        placeholder="Let others know about you..." 
+                                        name="bio" 
+                                        onChange={e=>setBio(e.target.value)}
+                                        style={{
+                                            marginBottom: '10px'
+                                        }}
+                                        >
+                                    
+                                    </textarea>
+                                </div>
+                            <div className='ui footer' 
+                                style={{
+                                    width: '96%',
+                                    margin: 'auto',
+                                    alignItems: "center"
+                                }}>
+                                <div style={{}} >
+                                    <input 
+                                        type="submit" 
+                                        placeholder="Submit" 
+                                        className="ui positive button fluid "
+                                        id='submit'
+                                        />
+                                </div>
+                                <div style={{height: '10px'}}></div>
+                                {/* <br></br> */}
+                                <button 
+                                    className="ui button red fluid"
+                                    onClick={cancel}
+                                    >
                                     Cancel
                                 </button>
-                            </div>
+                                <div style={{margin: '10px 0px 0px 0px'}}>
+
+                                </div>
+                            </div> 
                         </div>
                     </div>
                 </div>

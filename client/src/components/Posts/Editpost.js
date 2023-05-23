@@ -11,7 +11,7 @@ export const Editpost = (props) => {
     const [description, setDescription] = useState('');
     const [picture, setPicture] = useState({myPict: ''});
 
-    useEffect(()=>{
+    useEffect( ()=>{
         if(!user){
             notify('You need to be logged in to do that!')
             navigate('/login')
@@ -48,9 +48,9 @@ export const Editpost = (props) => {
         setTitle(postDetails.title)
         setDescription(postDetails.description)
         setPicture({myPict: postDetails.picture})
-    },[])
+    }, [])
 
-    const onChangePict = async(e) => {
+    const onChangePicture = async(e) => {
         const file = e.target.files[0]
         const base64 = await convToBase64(file)
         setPicture({myPict: base64})
@@ -78,17 +78,20 @@ export const Editpost = (props) => {
             likes: postDetails.likes,
             totalReports: postDetails.totalReports,
         }
-        if(picture.myPict){
+        if(!picture.myPict){
+            notify('No image was given. Please upload an image')
+        }else{
+
             await axios.post('http://localhost:3001/posts/uploadImage', picture)
             .then((res) => {updatedPost.picture = res.data.secure_url})
             .catch(err => console.log(err))
+            await axios.patch(`http://localhost:3001/posts/${postId}/update`, updatedPost)
+            .then( res => notify(res.data.msg))
+            setTitle('')
+            setDescription('')
+            setPicture({myPict:''})
+            navigate(-1)
         }
-        await axios.patch(`http://localhost:3001/posts/${postId}/update`, updatedPost)
-        .then( res => notify(res.data.msg))
-        setTitle('')
-        setDescription('')
-        setPicture({myPict:''})
-        navigate(-1)
     }
     const cancel = () => {
         navigate(`/posts/${postId}`)
@@ -101,59 +104,143 @@ export const Editpost = (props) => {
         }
     }
     return(
-        <div>
-            Edit Post
-            <form className="ui form" onSubmit={onSubmit}>
+        <div className="ui container" style={{
+            marginLeft: '50%',
+            marginRight: '50%'
+        }}>
+
+            <form className="ui form" onSubmit={onSubmit} style={{
+                // margin: 'auto',
+                // width: '100%',
+                minWidth: '500px',
+                background: 'white'
+                
+            }}>
                 <div>
-                    <div className="field"  style={{marginLeft: '15%', marginRight: '15%'}}>
-                    <img src={showImage()} alt='NAN' className="ui medium circular image"/>
-                        <div>
-                            <label>Change picture</label>
-                            <input 
-                                type="file"
-                                name='picture'
-                                accept='.png, .jpg, .jpeg'
-                                onChange={(e)=>onChangePict(e)}
-                            />
-                        </div>
-                        <div className="ui two column doubling grid" style={{margin: "10%", marginTop: "0%"}}>
-                            <div className="field column" >
-                                <label>Title *</label>
+                    <div className="field"  style={{// marginLeft: '15%',
+                        // marginRight: '15%',
+                        width: '80%',
+                        border: '15px solid white',
+                        borderRadius: '4px',
+                        margin: 'auto',
+                        // background: 'white',
+                        opacity: '90%'}}>
+                        <h3 className="ui center aligned header" style={{margin: '2%'}}>Edit this post</h3>
+                            <div>
+                            <div className="field column required" >
+                                <label>Title</label>
                                 <input 
                                     type="text" 
                                     name="title" 
                                     defaultValue={postDetails.title}
                                     required
                                     onChange={e=>setTitle(e.target.value)}
-                                />
+                                    />
                             </div>
-                            <div className="field column" >
-                                <label>Picture</label>
-                                <input 
-                                    type="text" 
-                                    name="picture"
-                                    defaultValue={postDetails.picture}
-                                    onChange={e=>setPicture(e.target.value)}
-                                />
-                            </div>
-                            <div>
-                                <label><b>Description *</b></label>
-                                <textarea rows="25" cols="1000"
+                            <div className="ui segment field column required"
+                                    style={{
+                                        maxHeight: '100%',
+                                        height: '40%',
+                                        padding: '10px',
+                                        width: '100%',
+                                        // marginTop: '30px',
+                                        marginBottom: '33px',
+                                    }}
+                                    >
+                                    <center>
+
+                                    <img src={picture.myPict} 
+                                        alt='Selected image will be shown here' 
+                                        className='responsive'
+                                        style={{
+                                            position: 'float',
+                                            maxHeight: '50%',
+                                            width: '50%',
+                                            overflow: 'auto',
+                                            border: '5px solid #f7f7f9',
+                                        }}
+                                        />
+                                        </center>
+                                    <center>
+                                        {picture.myPict ? (
+                                            <button onClick={() => setPicture({myPict: ''})}
+                                            className='ui negative button' 
+                                                style={{
+                                                    marginTop: '55px',
+                                                    marginLeft: 'auto',
+                                                    marginRight: 'auto',
+                                                    marginBottom:'15px',
+                                                    padding: '10px',
+                                                    width: 'auto',
+                                                    cursor: 'pointer',
+                                                }}
+                                                > 
+                                                Remove image
+                                            </button>
+                                            ) : 
+                                            <>
+                                                <label for='IMAGE' className='ui button'
+                                                    style={{
+                                                        marginTop: '55px',
+                                                        marginLeft: 'auto',
+                                                        marginRight: 'auto',
+                                                        marginBottom:'15px',
+                                                        padding: '10px',
+                                                        width: 'auto',
+                                                        cursor: 'pointer',
+                                                    }}
+                                                    >
+                                                    Upload an image*
+                                                </label>
+                                            </>
+                                        }
+                                    </center>
+                                    <input 
+                                        type="file" 
+                                        name="picture"
+                                        id='IMAGE'
+                                        accept='.png, .jpg, .jpeg'
+                                        required
+                                        hidden={true}
+                                        onChange={e => {onChangePicture(e)}}
+                                        />
+                                </div>
+                            <div className="field column required">
+                                <label><b>Description</b></label>
+                                <textarea rows="25" 
                                     type="text" 
                                     name="description"
                                     defaultValue={postDetails.description}
                                     required  
                                     onChange={e => setDescription(e.target.value)}
-                                />
+                                    />
                             </div>
                             
-                            <div style={{alignItems: "center"}}>
-                                <input 
-                                    type="submit" 
-                                    className="ui blue button"
-                                />
-                                <button className='ui red button' onClick={() => cancel()}>Cancel</button>
-                            </div>
+                            <div className='ui footer' 
+                                style={{
+                                    width: '96%',
+                                    margin: 'auto',
+                                    alignItems: "center"
+                                }}>
+                                <div style={{}} >
+                                    <input 
+                                        type="submit" 
+                                        placeholder="Submit post" 
+                                        className="ui positive button fluid "
+                                        id='submit'
+                                        />
+                                </div>
+                                <div style={{height: '10px'}}></div>
+                                {/* <br></br> */}
+                                <button 
+                                    className="ui button red fluid"
+                                    onClick={() => {navigate(-1)}}
+                                    >
+                                    Cancel
+                                </button>
+                                <div style={{margin: '10px 0px 0px 0px'}}>
+                                </div>
+                            </div> 
                         </div>
                     </div>
                 </div>

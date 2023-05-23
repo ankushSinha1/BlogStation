@@ -34,7 +34,7 @@ router.route("/new").post(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (user) {
-    res.json({msg: "User with this email already exists!"})
+    return res.json({msg: "User with this email already exists!"})
   }
   //Hashing the inputted password by the user and replacing it with original one and then storing in database
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
