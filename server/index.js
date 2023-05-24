@@ -11,10 +11,10 @@ import authRoutes from './routes/authRoutes/authRoutes.js';
 import bodyParser from 'body-parser';
 const app = express();
 app.use(express.json({limit: '25mb'}))
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    next();
-  });
+// app.use((req, res, next) => {
+//     res.setHeader("Access-Control-Allow-Origin", "*");
+//     next();
+//   });
 //this is important to do or else req.body will always be undefined for us and no data will be posted in the database
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -24,7 +24,7 @@ dotenv.config();
 mongoose.connect(process.env.MONGO);
 
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  origin: 'https://blogstation-ado3.onrender.com', 
   credentials: true
 }));
 app.use('/user', userRoutes);
@@ -32,6 +32,6 @@ app.use('/posts', postRoutes);
 app.use('/home', homeRoute);
 app.use('/', authRoutes);
 app.get("/", (req, res) => {
-  res.status(201).json({message: "Connected to Backend!"});
+  res.json({message: "Connected to Backend!"});
 });
 app.listen(process.env.PORT, () => {console.log(`Cloud server started...`)});
