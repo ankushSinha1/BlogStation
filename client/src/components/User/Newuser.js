@@ -102,7 +102,7 @@ export const Newuser = () => {
                 }else{
                     localStorage.setItem('user', JSON.stringify(res.data))
                     axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-                    navigate(0)
+                    navigate('/home')
                     notify('Welcome to BlogStation')
                 }
             })

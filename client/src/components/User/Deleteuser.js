@@ -28,7 +28,7 @@ export const Deleteuser = () => {
                 .then((res)=>{
                     localStorage.clear();
                     axios.defaults.headers.common['Authorization'] = ``;
-                    navigate(0)
+                    navigate('/home')
                     notify(res.data.msg);
                 })
                 .catch(err => console.log(err))

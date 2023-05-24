@@ -62,7 +62,7 @@ export const Newcomment = () => {
             }else{
                 //if access token is intact
                 notify('Comment added!')
-                navigate(0)
+                navigate(`/posts/${postId}`)
             }
         })
         .catch(err => console.log(err));

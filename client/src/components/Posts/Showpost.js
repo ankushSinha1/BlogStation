@@ -78,7 +78,7 @@ export const Showpost = () => {
         }else{
             notify('You are not authorized to access this route')
         }
-        navigate(0)
+        navigate(`/posts/${postId}`)
     }
     const allComments = () => {
         if(postComments.length>0){

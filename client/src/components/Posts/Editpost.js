@@ -93,16 +93,6 @@ export const Editpost = (props) => {
             navigate(-1)
         }
     }
-    const cancel = () => {
-        navigate(`/posts/${postId}`)
-    }
-    const showImage = () => {
-        if(picture.myPict){
-            return picture.myPict
-        }else{
-            return postDetails.picture
-        }
-    }
     return(
         <div className="ui container" style={{
             marginLeft: '50%',
