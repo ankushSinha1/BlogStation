@@ -25,6 +25,7 @@ mongoose.connect(process.env.MONGO);
 
 app.use(cors({
   origin: 'https://blogstation-ado3.onrender.com', 
+  // origin: 'http://localhost:3000', 
   credentials: true
 }));
 app.use('/user', userRoutes);

@@ -68,8 +68,8 @@ export const Navbar = () => {
                 minWidth: '570px',
                     // marginBottom: '40px',
                     overflow: 'auto',
-                    border: '0px'
-                    // padding: "1%",
+                    border: '0px',
+                    paddingBottom: "1%",
                     // float: 'left',
                     // backgroundColor: 'white'
         }} >

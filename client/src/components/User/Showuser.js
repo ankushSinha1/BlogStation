@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
+import { Navbar } from '../Navbar/Navbar.js';
+
+
 export const Showuser = () => {
     var {userId} = useParams()
     const [userData, setUserData] = useState({})
@@ -34,7 +37,7 @@ export const Showuser = () => {
                             style={{
                                 float: 'right'
                             }}
-                        >
+                            >
                                 Delete user
                         </Link>
                     </div>
@@ -44,6 +47,8 @@ export const Showuser = () => {
             }
         }
         return(
+            <>
+            <Navbar/>
             <div className='ui container' style={{
                 margin: 'auto',
                 width: '80%',
@@ -102,7 +107,7 @@ export const Showuser = () => {
                                             // maxWidth: '100%'
                                             wordWrap: 'break-word'
                                         }}
-                                    ><b>Firstname:</b> {userData.firstName}</div>
+                                        ><b>Firstname:</b> {userData.firstName}</div>
                                     <div className='field column' 
                                         style={{
                                             padding: '14px', 
@@ -112,7 +117,7 @@ export const Showuser = () => {
                                             // maxWidth: '100%'
                                             wordWrap: 'break-word'
                                         }}
-                                    ><b>Lastname:</b> {userData.lastName}</div>
+                                        ><b>Lastname:</b> {userData.lastName}</div>
                                     <div className='field column' 
                                         style={{
                                             padding: '14px', 
@@ -122,7 +127,7 @@ export const Showuser = () => {
                                             // maxWidth: '100%'
                                             wordWrap: 'break-word'
                                         }}
-                                    ><b>Username:</b> {userData.username}</div>
+                                        ><b>Username:</b> {userData.username}</div>
                                     <div className='field column' 
                                         style={{
                                             padding: '14px', 
@@ -132,7 +137,7 @@ export const Showuser = () => {
                                             // maxWidth: '100%'
                                             wordWrap: 'break-word'
                                         }}
-                                    ><b>Age:</b> {userData.age}</div>
+                                        ><b>Age:</b> {userData.age}</div>
                                     <div className='field column' 
                                         style={{
                                             padding: '14px', 
@@ -142,7 +147,7 @@ export const Showuser = () => {
                                             // maxWidth: '100%'
                                             wordWrap: 'break-word'
                                         }}
-                                    ><b>Email:</b> {userData.email}</div>
+                                        ><b>Email:</b> {userData.email}</div>
                                     <div className='field column' 
                                         style={{
                                             padding: '14px', 
@@ -152,7 +157,7 @@ export const Showuser = () => {
                                             // maxWidth: '100%'
                                             wordWrap: 'break-word'
                                         }}
-                                    ><b>About:</b> {userData.bio}</div>
+                                        ><b>About:</b> {userData.bio}</div>
                                     <div className='field column' 
                                         style={{
                                             padding: '14px', 
@@ -162,7 +167,7 @@ export const Showuser = () => {
                                             // maxWidth: '100%'
                                             wordWrap: 'break-word'
                                         }}
-                                    ><b>{userData.following} Following</b></div>
+                                        ><b>{userData.following} Following</b></div>
                                     <div className='field column' 
                                         style={{
                                             padding: '14px', 
@@ -172,7 +177,7 @@ export const Showuser = () => {
                                             // maxWidth: '100%'
                                             wordWrap: 'break-word'
                                         }}
-                                    ><b>{userData.followers} Followers</b></div>
+                                        ><b>{userData.followers} Followers</b></div>
                                 </div>
                             </div>
                                     {authForEditAndDeleteUser()}
@@ -180,6 +185,7 @@ export const Showuser = () => {
                     </div>
                 </div>
             </div>
+            </>
         )
     }
 }

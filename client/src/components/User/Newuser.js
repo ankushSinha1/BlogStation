@@ -2,6 +2,9 @@ import React, { useState} from 'react'
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import {notify} from '../CustomStyling/notify.js';
+// import { Navbar } from '../Navbar/Navbar.js';
+
+
 export const Newuser = () => {
     const navigate = useNavigate();
     const [firstName, setFirstName] = useState('')
@@ -14,12 +17,6 @@ export const Newuser = () => {
     const [bio, setBio] = useState('')
 
     const [fileName, setFileName] = useState('')
-
-    // useEffect(()=>{
-    //     if(user){
-    //         notify('Cannot create a ')
-    //     }
-    // }, [])
     const onChangeFirstName = (e) => {
         setFirstName(e.target.value)
     }
@@ -119,6 +116,8 @@ export const Newuser = () => {
         }
     }
     return(
+        // <>
+        //     <Navbar/>
         <div>
             <form 
                 className="ui form " 
@@ -129,7 +128,7 @@ export const Newuser = () => {
                     width: '70%',
                     minWidth: '570px',
                 }}
-            >
+                >
                 <div>
                     <div className="field" 
                         style={{
@@ -249,7 +248,7 @@ export const Newuser = () => {
                                                     width: 'auto',
                                                     cursor: 'pointer',
                                                 }}
-                                            > 
+                                                > 
                                                 Remove image
                                             </button>
                                             ) : 
@@ -282,14 +281,14 @@ export const Newuser = () => {
                                 </div>
                                 <div className="two column row" >
                                     <div  style={{
-                                            // position: 'sticky',
-                                            left: '0px',
-                                            display: 'block ',
-                                            width: '100%',
-                                            // fontStyle: 'strong'
-                                            // margnTop: '100px'
-                                        }}
-                                        className='field required'>
+                                        // position: 'sticky',
+                                        left: '0px',
+                                        display: 'block ',
+                                        width: '100%',
+                                        // fontStyle: 'strong'
+                                        // margnTop: '100px'
+                                    }}
+                                    className='field required'>
                                             <label for='bio' ><b>About</b></label>
                                     </div>
                                     {/* <div style={{height: '24px'}}></div> */}
