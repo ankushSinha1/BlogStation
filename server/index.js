@@ -32,6 +32,6 @@ app.use('/posts', postRoutes);
 app.use('/home', homeRoute);
 app.use('/', authRoutes);
 app.get("/", (req, res) => {
-  res.json({message: "Connected to Backend!"});
+  return res.json({message: "Connected to Backend!"});
 });
 app.listen(process.env.PORT, () => {console.log(`Cloud server started...`)});

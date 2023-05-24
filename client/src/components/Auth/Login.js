@@ -38,7 +38,7 @@ export const Login = () => {
                     localStorage.setItem('user', JSON.stringify(res.data))
                     axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
                     navigate('/home');
-                    navigate(0)
+                    // navigate(0)
                     notify(res.data.msg)
                 }else{
                     notify(res.data.msg)
