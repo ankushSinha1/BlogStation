@@ -12,7 +12,6 @@ import {Newpost} from './components/Posts/Newpost.js';
 import {Editpost} from './components/Posts/Editpost.js';
 import {Deletepost} from './components/Posts/Deletepost.js';
 import {Login} from './components/Auth/Login.js';
-import {Register} from './components/Auth/Register.js';
 import {Editcomment} from './components/Comments/Editcomment.js';
 
 import { ToastContainer } from 'react-toastify';
@@ -45,7 +44,6 @@ function App() {
           <Route path='/posts/:postId/delete' element={<Deletepost/>}/>
           <Route path='/posts/:postId/comment/:commentId/edit' element={<Editcomment/>}/>
           <Route path='/login' element={<Login/>}/>
-          <Route path='/register' element={Register()}/>
         </Routes>
         </div>
       </BrowserRouter>
