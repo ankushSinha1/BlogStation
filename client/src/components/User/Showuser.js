@@ -16,7 +16,7 @@ export const Showuser = () => {
         .then((res)=>{setUserData(res.data)})
         .catch((error) => {console.log(error)})
     }, [])
-    if(userData === null){ return <div> User not found </div> }
+    if(!userData._id ){ return <div> User not found </div> }
     else{
         const authForEditAndDeleteUser = () => {
             if(JSON.parse(user).user._id === userId){
