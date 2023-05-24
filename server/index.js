@@ -23,9 +23,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 dotenv.config();
 mongoose.connect(process.env.MONGO);
 
-app.use(cors({origin: true, credentials: true}));
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true
+}));
 app.use('/user', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/home', homeRoute);
 app.use('/', authRoutes);
-app.listen(3001, () => {console.log(`Cloud server started...`)});
+app.get("/", (req, res) => {
+  res.status(201).json({message: "Connected to Backend!"});
+});
+app.listen(process.env.PORT, () => {console.log(`Cloud server started...`)});

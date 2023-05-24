@@ -1,0 +1,16 @@
+{
+  "name": "blogstation",
+  "version": "1.0.0",
+  "description": "This is a FullStack MERN web application made using ReactJS for frontend, NodeJS fro backend and MongoDB for database management. This is blogging website for users \r all over the globe to share their ideas, thoughts on any topic. CRUD operations can be performed on every user, each post submitted by them and every comment they add.\r Authentication and authorization are taken care of using JWT and Brcypt librraries.",
+  "main": "index.js",
+  "scripts": {
+    "install-server": "cd server && npm install",
+    "start-server": "cd server && nodemon index",
+    "install-client": "cd client && npm install",
+    "build-client": "cd client && npm run build",
+    "start-client": "cd client && npm run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

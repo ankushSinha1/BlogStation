@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {Welcomepage} from './components/Welcomepage/Welcomepage.js';
 import {Homepage} from './components/Homepage/Homepage.js';
 import { Navbar } from './components/Navbar/Navbar.js';
@@ -19,7 +19,14 @@ import { ToastContainer } from 'react-toastify';
 import '../node_modules/react-toastify/dist/ReactToastify.css';
 
 function App() {
+  const [message, setMessage] = useState("");
+  useEffect(()=>{
+    fetch("http://localhost:3001")
+    .then(res => res.json())
+    .then(data => setMessage(data.message))
 
+  }, [])
+  console.log(message)
   return (
     <div className="App">
       <BrowserRouter>
