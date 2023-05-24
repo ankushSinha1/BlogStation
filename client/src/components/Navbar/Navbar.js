@@ -1,31 +1,36 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import {useSelector, useDispatch} from 'react-redux';
+import { bindActionCreators } from "redux";
+import { actionCreator } from "../../state/index";
 import axios from 'axios'
 import { notify } from "../CustomStyling/notify.js";
 // import { Logout } from "../Auth/Logout.js";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 const user = localStorage.getItem('user')
 
 export const Navbar = () => {
     const navigate = useNavigate()
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    useEffect(()=>{
-        if(user) {
-            setIsLoggedIn(true)
-        }
-    }, [])
-    const Logout = async () => {        
+    const state = useSelector(state.login);
+    const dispatch = useDispatch();
+    const actions = bindActionCreators(actionCreator, dispatch)
+    // const [isLoggedIn, setIsLoggedIn] = useState(false)
+    // useEffect(()=>{
+    //     if(user) {
+    //         setIsLoggedIn(true)
+    //     }
+    // }, [])
+    const Logout = async () => {
         await axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
         .then(data => console.log(data.data.msg))
         .catch(err => console.log(err))
         localStorage.clear()
         axios.defaults.headers.common['Authorization'] = '';
-        setIsLoggedIn(false)
+        actions.onLogout(false)
         notify('Logged out successfully!')
     }
-    const loggedIn = (isLoggedIn) => {
-        if(!isLoggedIn){
+    const loggedIn = (state) => {
+        if(!state){
             return(
                 <div className="right menu" >
                     <div  className="item" style={{padding: '4px'}}> 
@@ -83,7 +88,7 @@ export const Navbar = () => {
                 <div  className="item" onClick={()=>{navigate('/posts/new')}} style={{cursor: 'pointer'}}>
                     <div >Add post</div>
                 </div>
-                {loggedIn(isLoggedIn)}
+                {loggedIn(state)}
             </div>
         </div>
         </>

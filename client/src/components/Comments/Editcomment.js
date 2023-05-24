@@ -14,7 +14,7 @@ export const Editcomment = () => {
         .then((res) => setCommentDetails(res.data))
         .catch(err => console.log(err))
     }, [])
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault()
         const updatedComment = {
             text: text,
@@ -23,7 +23,7 @@ export const Editcomment = () => {
             totalReports: 0,
             postId: postId, 
         }
-        axios.patch(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${commentId}/update`, updatedComment)
+        await axios.patch(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${commentId}/update`, updatedComment)
         .then((res) => {
             notify(res.data.msg)
             navigate(`/posts/${postId}`)  

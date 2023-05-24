@@ -17,7 +17,6 @@ export const Newpost = () => {
             notify('You need to be logged in to do that!')
             navigate('/login')
         }else{
-
             axios.get(`https://blogstation-agfm.onrender.com/user/${JSON.parse(user).user._id}`)
             .then((res) => {
                 setAuthorDetails(res.data)
@@ -71,7 +70,7 @@ export const Newpost = () => {
             .catch(err => console.log(err))
             
             //For creating a new post
-            axios.post('https://blogstation-agfm.onrender.com/posts/new', newPost)
+            await axios.post('https://blogstation-agfm.onrender.com/posts/new', newPost)
             .then((res) => {
                 //if access token is expired
                 if(res.data.msg === 'Token expired!'){

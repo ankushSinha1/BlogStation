@@ -2,11 +2,18 @@ import React, { useState} from 'react'
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import {notify} from '../CustomStyling/notify.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionCreator } from '../../state/index.js';
 // import { Navbar } from '../Navbar/Navbar.js';
 
 
 export const Newuser = () => {
     const navigate = useNavigate();
+    const state = useSelector(state.login);
+    const dispatch = useDispatch();
+    const actions = bindActionCreators(actionCreator, dispatch);
+
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
@@ -16,7 +23,6 @@ export const Newuser = () => {
     const [dP, setDp] = useState({myPict: ''})
     const [bio, setBio] = useState('')
 
-    const [fileName, setFileName] = useState('')
     const onChangeFirstName = (e) => {
         setFirstName(e.target.value)
     }
@@ -48,12 +54,6 @@ export const Newuser = () => {
     const onChangeBio = (e) => {
         setBio(e.target.value)
 
-    }
-    const displayFileName = (e) => {
-        if(e.target.files[0]){
-            console.log(e.target.files[0])
-            setFileName(e.target.files[0].name)
-        }
     }
     const convToBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -91,7 +91,7 @@ export const Newuser = () => {
             })
             .catch(err => console.log(err))
             //For creating new user
-            axios.post('https://blogstation-agfm.onrender.com/user/new', newUser)
+            await axios.post('https://blogstation-agfm.onrender.com/user/new', newUser)
             .then((res) => {
                 if(res.data.msg === 'User with this email already exists!'){
                     notify(res.data.msg)
@@ -104,6 +104,7 @@ export const Newuser = () => {
                 }
             })
             .catch((error) => {console.log(error)});
+            actions.onLogin(true);
             setFirstName('')
             setLastName('')
             setUsername('')

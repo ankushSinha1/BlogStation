@@ -22,7 +22,7 @@ export const Newcomment = () => {
         }
 
     }, [])
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault()
         if(!user){
             notify('You need to be logged in to do that!')
@@ -37,15 +37,15 @@ export const Newcomment = () => {
                 likes: 0,
                 totalReports: 0,
             }
-            axios.post(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/new`, newComment)
-            .then(res => {
+            await axios.post(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/new`, newComment)
+            .then(async res => {
                 if(res.data.msg === 'Token expired!'){
                 notify('Id expired.')
-                axios.post('https://blogstation-agfm.onrender.com/refToken', JSON.parse(user))
-                .then(data => {
+                await axios.post('https://blogstation-agfm.onrender.com/refToken', JSON.parse(user))
+                .then(async data => {
                     //if reftoken is also expired
                     if(data.data.msg === 'RefToken expired'){
-                        axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
+                        await axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
                         .then(data => console.log(data))
                         .catch(err => console.log(err))
                         notify('Error occurred. Login required')
@@ -64,7 +64,7 @@ export const Newcomment = () => {
             }else{
                 //if access token is intact
                 notify('Comment added!')
-                navigate(`/posts/${postId}`)
+                navigate(`/home`)
             }
         })
         .catch(err => console.log(err));

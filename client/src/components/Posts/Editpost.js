@@ -54,6 +54,7 @@ export const Editpost = (props) => {
     }, [])
 
     const onChangePicture = async(e) => {
+        setPicture({myPict: ''})
         const file = e.target.files[0]
         const base64 = await convToBase64(file)
         setPicture({myPict: base64})

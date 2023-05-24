@@ -9,7 +9,7 @@ export const Homepage = () => {
     const navigate = useNavigate()
     const [allPosts, setAllPosts] = useState([]);
     const user = localStorage.getItem('user')
-    useEffect( () => {
+    useEffect(() => {
         if(user){
             axios.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(user).token}`;
         }
@@ -76,8 +76,7 @@ export const Homepage = () => {
                 <div>
                     <div className="ui active inverted dimmer" >
                         <div className='ui large text loader'>
-                        <p>Fetching all posts</p>
-
+                            <p>Fetching all posts</p>
                         </div>
                     </div>
                 </div>

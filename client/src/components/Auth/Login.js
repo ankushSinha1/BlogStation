@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState} from 'react';
 import axios from 'axios';
 import {useNavigate, Link} from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {actionCreator} from '../../state/index.js';
 import { notify } from '../CustomStyling/notify.js';
@@ -10,6 +10,7 @@ import { notify } from '../CustomStyling/notify.js';
 export const Login = () => {
     const navigate = useNavigate();
     const user = localStorage.getItem('user');
+    const state = useSelector(state.login);
     const dispatch = useDispatch();
     const actions = bindActionCreators(actionCreator, dispatch);
     const [email, setemail] = useState('');
@@ -30,15 +31,15 @@ export const Login = () => {
             notify('You are already logged in')
             navigate('/home')
         }else{
-
-            axios.post('https://blogstation-agfm.onrender.com/login', loginData)
+            await axios.post('https://blogstation-agfm.onrender.com/login', loginData)
             .then((res) => {
                 if(res.data.token){
                     //Sets the authorization parameter in req.headers
+                    
                     localStorage.setItem('user', JSON.stringify(res.data))
                     axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+                    actions.onLogin(true)
                     navigate('/home');
-                    // navigate(0)
                     notify(res.data.msg)
                 }else{
                     notify(res.data.msg)

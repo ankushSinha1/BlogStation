@@ -21,6 +21,32 @@ export const Deletepost = (props) => {
             console.log(err)
         })
         
+        // if(postDetails.author){
+        //     if(postDetails.author.username === JSON.parse(user).user.username){      
+        //         console.log(postDetails)
+        //         axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/delete`)
+        //         .then(res => {
+        //             notify(res.data.msg)
+        //         })
+        //         .catch(err => {
+        //             console.log(err)
+        //         })
+        //     }else{
+        //         notify('You are not authorized to access this route!')
+        //     }
+        //     notify('Post deleted')
+            
+        // }
+    }, [])
+    const deletePost = async () => {
+        await axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/delete`)
+        .then(res => {
+            notify(res.data.msg)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        
         if(postDetails.author){
             if(postDetails.author.username === JSON.parse(user).user.username){      
                 console.log(postDetails)
@@ -35,14 +61,13 @@ export const Deletepost = (props) => {
                 notify('You are not authorized to access this route!')
             }
             notify('Post deleted')
-            
+            navigate('/home')
         }
-    }, [])
-
+    }
     return(
         <div>
         {/* <Navbar/> */}
-            {navigate('/home')}
+            {deletePost()}
         </div>
     )
 }

@@ -1,11 +1,8 @@
-const tokenReducer = (state={token: '', user: ''}, action) => {
+const tokenReducer = (state='false', action) => {
     if(action.type === 'LOGIN'){
-        return {...state,
-            token: action.payload.token,
-            user: action.payload.user,
-        };
+        return {state:'true'};
     }else if(action.type === 'LOGOUT'){
-        return (state.token = '', state.user='');
+        return ({state: 'false'});
     }else{
         return state;
     }

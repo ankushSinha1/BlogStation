@@ -1,14 +1,14 @@
-export const onLogin = (token, user, msg)=> {
+export const onLogin = (state)=> {
     return (dispatch) => 
     dispatch({
         type: 'LOGIN',
-        payload: {token, user, msg},
+        payload: {state},
     })
 }
-export const onLogout = (token, user, msg) => {
+export const onLogout = (state) => {
     return (dispatch) => 
     dispatch({
         type: 'LOGOUT',
-        payload: {token, user, msg},
+        payload: {state},
     })
 }
