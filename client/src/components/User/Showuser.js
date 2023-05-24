@@ -16,6 +16,7 @@ export const Showuser = () => {
         .then((res)=>{setUserData(res.data)})
         .catch((error) => {console.log(error)})
     }, [])
+    console.log(userData)
     if(!userData._id ){ return <div> User not found </div> }
     else{
         const authForEditAndDeleteUser = () => {

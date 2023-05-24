@@ -51,7 +51,7 @@ router.route("/new").post(async (req, res) => {
   let newRefToken = new RefToken({refToken: refToken})
   newRefToken.save();
   try {
-    return res.json(response);
+    return res.json({response, msg: 'User fetched'});
   } catch (err) {
     return res.json(err.toString());
   }

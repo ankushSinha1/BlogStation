@@ -12,6 +12,7 @@ const user = localStorage.getItem('user')
 export const Navbar = () => {
     const navigate = useNavigate()
     const state = useSelector(state.login);
+    console.log(state)
     const dispatch = useDispatch();
     const actions = bindActionCreators(actionCreator, dispatch)
     // const [isLoggedIn, setIsLoggedIn] = useState(false)
