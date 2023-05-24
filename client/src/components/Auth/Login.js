@@ -31,7 +31,7 @@ export const Login = () => {
             navigate('/home')
         }else{
 
-            axios.post('http://localhost:3001/login', loginData)
+            axios.post('https://blogstation-agfm.onrender.com/login', loginData)
             .then((res) => {
                 if(res.data.token){
                     //Sets the authorization parameter in req.headers

@@ -13,7 +13,7 @@ export const Deleteuser = () => {
             navigate('/login')
         }else{
 
-            axios.get(`http://localhost:3001/user/${userId}`)
+            axios.get(`https://blogstation-agfm.onrender.com/user/${userId}`)
             .then(res => {
                 setUserDetails(res.data)
             })
@@ -24,7 +24,7 @@ export const Deleteuser = () => {
     const deleteUser = () => {
         if(userDetails._id){
             if(userDetails.email === JSON.parse(user).user.email){
-                axios.delete(`http://localhost:3001/user/${userId}/delete`)
+                axios.delete(`https://blogstation-agfm.onrender.com/user/${userId}/delete`)
                 .then((res)=>{
                     localStorage.clear();
                     axios.defaults.headers.common['Authorization'] = ``;

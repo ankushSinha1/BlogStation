@@ -11,7 +11,7 @@ export const Homepage = () => {
         if(user){
             axios.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(user).token}`;
         }
-        axios.get(`http://localhost:3001/home`)
+        axios.get(`https://blogstation-agfm.onrender.com/home`)
         .then(res => {setAllPosts(res.data)})
         .catch(err =>console.log(err) )
     }, [])

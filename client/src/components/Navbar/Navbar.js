@@ -16,7 +16,7 @@ export const Navbar = () => {
         }
     }, [])
     const Logout = async () => {        
-        await axios.post('http://localhost:3001/deleteRefToken', JSON.parse(user))
+        await axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
         .then(data => console.log(data.data.msg))
         .catch(err => console.log(err))
         localStorage.clear()

@@ -16,12 +16,12 @@ export const Showpost = () => {
         if(user){
             axios.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
         }
-        axios.get(`http://localhost:3001/posts/${postId}`)
+        axios.get(`https://blogstation-agfm.onrender.com/posts/${postId}`)
         .then((res) => {
             setPostDetails(res.data)
         })
         .catch((err)=>console.log(err));
-        axios.get(`http://localhost:3001/posts/${postId}/comment`)
+        axios.get(`https://blogstation-agfm.onrender.com/posts/${postId}/comment`)
         .then((res) => {
             setPostComments(res.data)
         })
@@ -72,7 +72,7 @@ export const Showpost = () => {
     const deleteComment = (COMMENT) => {
         console.log(COMMENT)
         if(COMMENT.author.email === JSON.parse(user).user.email){
-            axios.delete(`http://localhost:3001/posts/${postId}/comment/${COMMENT._id}/delete`)
+            axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${COMMENT._id}/delete`)
             .then((res) => notify(res.data.msg))
             .catch(err => console.log(err))
         }else{

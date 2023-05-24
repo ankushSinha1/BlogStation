@@ -9,7 +9,7 @@ export const Showuser = () => {
         if(user){
             axios.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
         }
-        axios.get(`http://localhost:3001/user/${userId}`)
+        axios.get(`https://blogstation-agfm.onrender.com/user/${userId}`)
         .then((res)=>{setUserData(res.data)})
         .catch((error) => {console.log(error)})
     }, [])

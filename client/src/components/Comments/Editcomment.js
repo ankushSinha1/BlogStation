@@ -10,7 +10,7 @@ export const Editcomment = () => {
     const [commentDetails, setCommentDetails] = useState({});
     
     useEffect(() => {
-        axios.get(`http://localhost:3001/posts/${postId}/comment/${commentId}`)
+        axios.get(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${commentId}`)
         .then((res) => setCommentDetails(res.data))
         .catch(err => console.log(err))
     }, [])
@@ -23,7 +23,7 @@ export const Editcomment = () => {
             totalReports: 0,
             postId: postId, 
         }
-        axios.patch(`http://localhost:3001/posts/${postId}/comment/${commentId}/update`, updatedComment)
+        axios.patch(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${commentId}/update`, updatedComment)
         .then((res) => {
             notify(res.data.msg)
             navigate(`/posts/${postId}`)  

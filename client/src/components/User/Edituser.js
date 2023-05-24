@@ -21,15 +21,15 @@ export const Edituser= () =>{
             navigate('/login')
         }
         //Before rendering the edit user form
-         axios.get(`http://localhost:3001/user/${userId}/edit`)
+         axios.get(`https://blogstation-agfm.onrender.com/user/${userId}/edit`)
         .then((res)=>{
             if(res.data.msg === 'Token expired!'){
                 notify('Id expired.')
-                axios.post('http://localhost:3001/refToken', JSON.parse(user))
+                axios.post('https://blogstation-agfm.onrender.com/refToken', JSON.parse(user))
                 .then(data => {
                     //if reftoken is also expired
                     if(data.data.msg === 'RefToken expired'){
-                        axios.post('http://localhost:3001/deleteRefToken', JSON.parse(user))
+                        axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
                         .then(data => console.log(data))
                         .catch(err => console.log(err))
                         notify('Error occurred. Login required')
@@ -97,10 +97,10 @@ export const Edituser= () =>{
             notify('No image was given. Please upload an image')
         }else{
 
-            await axios.post('http://localhost:3001/user/uploadImage', dP)
+            await axios.post('https://blogstation-agfm.onrender.com/user/uploadImage', dP)
             .then(res => {updatedUser.dP = res.data.secure_url})
             .catch(err => console.log(err))
-            await axios.patch(`http://localhost:3001/user/${userId}/update`, updatedUser)
+            await axios.patch(`https://blogstation-agfm.onrender.com/user/${userId}/update`, updatedUser)
             .then((res)=>{
                 notify(res.data.msg)
             })

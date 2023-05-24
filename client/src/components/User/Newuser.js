@@ -88,13 +88,13 @@ export const Newuser = () => {
         if(!dP.myPict){
             notify('No image was given. Please upload an image')
         }else{
-            await axios.post('http://localhost:3001/posts/uploadImage', dP)
+            await axios.post('https://blogstation-agfm.onrender.com/posts/uploadImage', dP)
             .then(res => {
                 newUser.dP = res.data.secure_url
             })
             .catch(err => console.log(err))
             //For creating new user
-            axios.post('http://localhost:3001/user/new', newUser)
+            axios.post('https://blogstation-agfm.onrender.com/user/new', newUser)
             .then((res) => {
                 if(res.data.msg === 'User with this email already exists!'){
                     notify(res.data.msg)

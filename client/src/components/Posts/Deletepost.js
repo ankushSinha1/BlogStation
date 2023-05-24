@@ -8,10 +8,10 @@ export const Deletepost = (props) => {
     const user = localStorage.getItem('user')
     const navigate = useNavigate();
     useEffect(()=> {
-        axios.get(`http://localhost:3001/posts/${postId}`)
+        axios.get(`https://blogstation-agfm.onrender.com/posts/${postId}`)
         .then(res => {setPostDetails(res.data)})
         .catch(err => console.log(err))
-        axios.delete(`http://localhost:3001/posts/${postId}/delete`)
+        axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/delete`)
         .then(res => {
             notify(res.data.msg)
         })
@@ -22,7 +22,7 @@ export const Deletepost = (props) => {
         if(postDetails.author){
             if(postDetails.author.username === JSON.parse(user).user.username){      
                 console.log(postDetails)
-                axios.delete(`http://localhost:3001/posts/${postId}/delete`)
+                axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/delete`)
                 .then(res => {
                     notify(res.data.msg)
                 })

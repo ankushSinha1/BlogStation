@@ -12,7 +12,7 @@ export const Newcomment = () => {
     useEffect(() => {
         if(user){
             axios.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
-            axios.get(`http://localhost:3001/user/${JSON.parse(user).user._id}`)
+            axios.get(`https://blogstation-agfm.onrender.com/user/${JSON.parse(user).user._id}`)
             .then((res) => {
                 setAuthorDetails(res.data)
             })
@@ -35,15 +35,15 @@ export const Newcomment = () => {
                 likes: 0,
                 totalReports: 0,
             }
-            axios.post(`http://localhost:3001/posts/${postId}/comment/new`, newComment)
+            axios.post(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/new`, newComment)
             .then(res => {
                 if(res.data.msg === 'Token expired!'){
                 notify('Id expired.')
-                axios.post('http://localhost:3001/refToken', JSON.parse(user))
+                axios.post('https://blogstation-agfm.onrender.com/refToken', JSON.parse(user))
                 .then(data => {
                     //if reftoken is also expired
                     if(data.data.msg === 'RefToken expired'){
-                        axios.post('http://localhost:3001/deleteRefToken', JSON.parse(user))
+                        axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
                         .then(data => console.log(data))
                         .catch(err => console.log(err))
                         notify('Error occurred. Login required')
