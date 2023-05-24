@@ -8,11 +8,11 @@ export const Showuser = () => {
     var {userId} = useParams()
     const [userData, setUserData] = useState({})
     let user = localStorage.getItem('user')
-    useEffect(() => {
+    useEffect(async () => {
         if(user){
             axios.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
         }
-        axios.get(`https://blogstation-agfm.onrender.com/user/${userId}`)
+        await axios.get(`https://blogstation-agfm.onrender.com/user/${userId}`)
         .then((res)=>{setUserData(res.data)})
         .catch((error) => {console.log(error)})
     }, [])
@@ -20,7 +20,7 @@ export const Showuser = () => {
     if(!userData._id ){ return <div> User not found </div> }
     else{
         const authForEditAndDeleteUser = () => {
-            if(JSON.parse(user).user._id === userId){
+            if(user && JSON.parse(user).user._id === userId){
                 return (
                     <div style={{
                         marginLeft: '4%',
