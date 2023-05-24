@@ -4,6 +4,7 @@ import { notify } from "../CustomStyling/notify.js";
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import {Newcomment} from '../Comments/Newcomment.js'
 import {monthNumToName} from '../Controllers/monthNumToName.js';
+import { Navbar } from '../Navbar/Navbar.js';
 
 
 export const Showpost = () => {
@@ -45,7 +46,7 @@ export const Showpost = () => {
                     style={{
                         float: 'right'
                     }}
-                >
+                    >
                     Remove this comment
                 </button> 
                 </div>
@@ -95,7 +96,7 @@ export const Showpost = () => {
                                     className="avatar" 
                                     style={{height: '50px', width: '50px', borderRadius: '15px', cursor: 'pointer'}} 
                                     onClick={()=>(navigate(`/user/${comment.author._id}`))}
-                                />
+                                    />
                                 <div className="content" style={{}}>
                                     <div className="metadata" style={{width: '98%'}}>
                                         <Link className="author" to={`/user/${comment.author._id}`} style={{}}>
@@ -152,6 +153,8 @@ export const Showpost = () => {
     {monthNumToName(date)};
     if(postDetails.author){
         return(
+            <>
+            <Navbar/>
                 <div className="ui container" 
                 style={{
                     marginLeft: '50%', 
@@ -185,7 +188,7 @@ export const Showpost = () => {
                                         fontWeight: '700',
                                         // fontSize: '5px'
                                     }}
-                                >
+                                    >
                                     {postDetails.author.firstName} {postDetails.author.lastName}
                                 </Link>
                         </div>
@@ -212,6 +215,7 @@ export const Showpost = () => {
                         </div>
                     </div>
                 </div>
+            </>
         )
     }else{
         <div>Loading...</div>

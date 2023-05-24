@@ -1,7 +1,9 @@
 import React,{useEffect, useState} from "react"
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
-import {notify} from '../CustomStyling/notify.js'
+import {notify} from '../CustomStyling/notify.js';
+import { Navbar } from '../Navbar/Navbar.js';
+
 export const Newpost = () => {
     const user = localStorage.getItem('user');
     const navigate = useNavigate();
@@ -61,7 +63,7 @@ export const Newpost = () => {
         if(!picture.myPict){
             notify('No image was given. Please upload an image')
         }else{
-
+            
             await axios.post('https://blogstation-agfm.onrender.com/posts/uploadImage', picture)
             .then(res => {
                 newPost.picture = res.data.secure_url
@@ -109,6 +111,8 @@ export const Newpost = () => {
         
     }
     return(
+        <>
+        <Navbar/>
         <div className="ui container" style={{
             marginLeft: '50%',
             marginRight: '50%'
@@ -142,7 +146,7 @@ export const Newpost = () => {
                                     placeholder="Enter Title" 
                                     required
                                     onChange={onChangeTitle}
-                                />
+                                    />
                             </div>
                             <div className="ui segment field column required"
                                     style={{
@@ -169,8 +173,8 @@ export const Newpost = () => {
                                     <center>
                                         {picture.myPict ? (
                                             <button onClick={() => setPicture({myPict: ''})}
-                                                className='ui negative button' 
-                                                style={{
+                                            className='ui negative button' 
+                                            style={{
                                                     marginTop: '55px',
                                                     marginLeft: 'auto',
                                                     marginRight: 'auto',
@@ -179,7 +183,7 @@ export const Newpost = () => {
                                                     width: 'auto',
                                                     cursor: 'pointer',
                                                 }}
-                                            > 
+                                                > 
                                                 Remove image
                                             </button>
                                             ) : 
@@ -219,7 +223,7 @@ export const Newpost = () => {
                                     placeholder="Enter Content" 
                                     required  
                                     onChange={onChangeDescription}
-                                />
+                                    />
                             </div>
                             <div className='ui footer' 
                                 style={{
@@ -251,5 +255,6 @@ export const Newpost = () => {
                 </div>
             </form>
         </div>
+        </>
     )
 }

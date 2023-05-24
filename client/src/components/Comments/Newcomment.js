@@ -2,6 +2,8 @@ import axios from "axios"
 import React, {useEffect, useState} from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { notify } from "../CustomStyling/notify";
+import { Navbar } from '../Navbar/Navbar.js';
+        
 export const Newcomment = () => {
     var {postId} = useParams()
     const navigate = useNavigate();
@@ -71,6 +73,7 @@ export const Newcomment = () => {
     }
     return(
         <div>
+            <Navbar/>
             <h3>Add a comment</h3>
             <form className="ui form"  onSubmit={e => onSubmit(e)}>
                 <div className="ui segments">

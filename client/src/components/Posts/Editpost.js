@@ -2,6 +2,9 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { notify } from '../CustomStyling/notify';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Navbar } from '../Navbar/Navbar.js';
+
+
 export const Editpost = (props) => {
     let navigate = useNavigate();
     const {postId} = useParams();
@@ -81,7 +84,7 @@ export const Editpost = (props) => {
         if(!picture.myPict){
             notify('No image was given. Please upload an image')
         }else{
-
+            
             await axios.post('https://blogstation-agfm.onrender.com/posts/uploadImage', picture)
             .then((res) => {updatedPost.picture = res.data.secure_url})
             .catch(err => console.log(err))
@@ -94,6 +97,8 @@ export const Editpost = (props) => {
         }
     }
     return(
+        <>
+        <Navbar/>
         <div className="ui container" style={{
             marginLeft: '50%',
             marginRight: '50%'
@@ -155,15 +160,15 @@ export const Editpost = (props) => {
                                         {picture.myPict ? (
                                             <button onClick={() => setPicture({myPict: ''})}
                                             className='ui negative button' 
-                                                style={{
-                                                    marginTop: '55px',
-                                                    marginLeft: 'auto',
-                                                    marginRight: 'auto',
-                                                    marginBottom:'15px',
-                                                    padding: '10px',
-                                                    width: 'auto',
-                                                    cursor: 'pointer',
-                                                }}
+                                            style={{
+                                                marginTop: '55px',
+                                                marginLeft: 'auto',
+                                                marginRight: 'auto',
+                                                marginBottom:'15px',
+                                                padding: '10px',
+                                                width: 'auto',
+                                                cursor: 'pointer',
+                                            }}
                                                 > 
                                                 Remove image
                                             </button>
@@ -236,5 +241,6 @@ export const Editpost = (props) => {
                 </div>
             </form>
         </div>
+        </>
     )
 }

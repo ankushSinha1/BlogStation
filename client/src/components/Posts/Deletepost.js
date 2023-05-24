@@ -2,6 +2,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { notify } from '../CustomStyling/notify';
+import { Navbar } from '../Navbar/Navbar.js';
+
 export const Deletepost = (props) => {
     const {postId} = useParams();
     const [postDetails, setPostDetails] = useState({});
@@ -33,9 +35,14 @@ export const Deletepost = (props) => {
                 notify('You are not authorized to access this route!')
             }
             notify('Post deleted')
-            navigate('/home')
+            
         }
     }, [])
 
-    return(<div></div>)
+    return(
+        <div>
+        <Navbar/>
+            {navigate('/home')}
+        </div>
+    )
 }

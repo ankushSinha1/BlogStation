@@ -2,6 +2,8 @@ import React,{useState, useEffect} from "react";
 import axios from "axios";
 import { notify } from "../CustomStyling/notify";
 import { useNavigate, useParams } from "react-router-dom";
+import { Navbar } from '../Navbar/Navbar.js';
+
 export const Edituser= () =>{
     var {userId} = useParams()
     const navigate = useNavigate();
@@ -96,7 +98,7 @@ export const Edituser= () =>{
         if(!dP.myPict){
             notify('No image was given. Please upload an image')
         }else{
-
+            
             await axios.post('https://blogstation-agfm.onrender.com/user/uploadImage', dP)
             .then(res => {updatedUser.dP = res.data.secure_url})
             .catch(err => console.log(err))
@@ -114,12 +116,14 @@ export const Edituser= () =>{
             setBio('')        
             navigate(-1)
         }
-            
+        
     }
     const cancel = () => {
         navigate(`/user/${userDetails._id}`)
     }
     return(
+        <>
+        <Navbar/>
         <div>
             <form className="ui form two column stackable grid" onSubmit={onSubmit} style={{
                 margin: 'auto',
@@ -127,15 +131,15 @@ export const Edituser= () =>{
                 minWidth: '570px',
             }}>
                 <div style={{
-                        // marginLeft: '15%',
-                        // marginRight: '15%',
-                        width: '80%',
-                        border: '15px solid white',
-                        borderRadius: '4px',
-                        // margin: 'auto',
-                        background: 'white',
-                        opacity: '90%'
-                    }}>
+                    // marginLeft: '15%',
+                    // marginRight: '15%',
+                    width: '80%',
+                    border: '15px solid white',
+                    borderRadius: '4px',
+                    // margin: 'auto',
+                    background: 'white',
+                    opacity: '90%'
+                }}>
                     <div className="field" >
                         < h3 className="ui center aligned header" style={{margin: '2%'}}>Edit user details</h3>
                         <div className="ui segment field column required"
@@ -164,7 +168,7 @@ export const Edituser= () =>{
                             <center>
                                 {dP.myPict ? (
                                     <button onClick={() => setDp({myPict: ''})}
-                                        className='ui button' 
+                                    className='ui button' 
                                         style={{
                                             marginTop: '55px',
                                             marginLeft: 'auto',
@@ -247,7 +251,7 @@ export const Edituser= () =>{
                                     defaultValue={userDetails.age} 
                                     required 
                                     onChange={e => setAge(e.target.value)} 
-                                />
+                                    />
                             </div>
                             <div className="required field column" >
                                 <label>Email</label>
@@ -257,7 +261,7 @@ export const Edituser= () =>{
                                     defaultValue={userDetails.email}
                                     required
                                     onChange={e => setEmail(e.target.value)}
-                                />
+                                    />
                             </div>
                             <div className="two column row" >
                                     <div  style={{
@@ -320,5 +324,6 @@ export const Edituser= () =>{
                 </div>
             </form>
         </div>
+        </>
     )
 }

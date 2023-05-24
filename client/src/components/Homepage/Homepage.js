@@ -3,6 +3,8 @@ import axios from 'axios';
 import {useNavigate } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {monthNumToName} from '../Controllers/monthNumToName'
+// import { Navbar } from './components/Navbar/Navbar.js';
+import { Navbar } from '../Navbar/Navbar.js';
 export const Homepage = () => {
     const navigate = useNavigate()
     const [allPosts, setAllPosts] = useState([]);
@@ -25,7 +27,7 @@ export const Homepage = () => {
                     return(
                         <div className='column' style={{padding: '4%'}}>
                             <div className="ui segment card raised" key={post._id} style={{width: '100%'}}>
-                            <div className="content" style={{width: '100%', height: '100%'}}>
+                                <div className="content" style={{width: '100%', height: '100%'}}>
                                 <img 
                                     className="ui avatar image middle aligned" 
                                     src={post.author.dP}  
@@ -72,6 +74,7 @@ export const Homepage = () => {
         }else{
             return(
                 <div>
+                    <Navbar/>
                     <div className="ui active inverted dimmer" >
                         <div className='ui large text loader'>
                         <p>Fetching all posts</p>
