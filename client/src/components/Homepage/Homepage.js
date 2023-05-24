@@ -74,7 +74,6 @@ export const Homepage = () => {
         }else{
             return(
                 <div>
-                    <Navbar/>
                     <div className="ui active inverted dimmer" >
                         <div className='ui large text loader'>
                         <p>Fetching all posts</p>
@@ -86,8 +85,11 @@ export const Homepage = () => {
         }
     }
     return(
+        <>
+        <Navbar/>
         <div className='ui three column doubling grid' >
             {displayAllPosts(allPosts)}
         </div>
+        </>
     )
 }
