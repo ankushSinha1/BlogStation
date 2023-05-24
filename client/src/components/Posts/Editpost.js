@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { notify } from '../CustomStyling/notify';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Navbar } from '../Navbar/Navbar.js';
+// import { Navbar } from '../Navbar/Navbar.js';
 
 
 export const Editpost = (props) => {
@@ -98,7 +98,7 @@ export const Editpost = (props) => {
     }
     return(
         <>
-        <Navbar/>
+        {/* <Navbar/> */}
         <div className="ui container" style={{
             marginLeft: '50%',
             marginRight: '50%'

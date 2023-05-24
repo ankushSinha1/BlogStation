@@ -2,7 +2,7 @@ import React,{useState, useEffect} from "react";
 import axios from "axios";
 import { notify } from "../CustomStyling/notify";
 import { useNavigate, useParams } from "react-router-dom";
-import { Navbar } from '../Navbar/Navbar.js';
+// import { Navbar } from '../Navbar/Navbar.js';
 
 export const Edituser= () =>{
     var {userId} = useParams()
@@ -123,7 +123,7 @@ export const Edituser= () =>{
     }
     return(
         <>
-        <Navbar/>
+        {/* <Navbar/> */}
         <div>
             <form className="ui form two column stackable grid" onSubmit={onSubmit} style={{
                 margin: 'auto',

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
-import { Navbar } from '../Navbar/Navbar.js';
+// import { Navbar } from '../Navbar/Navbar.js';
 
 
 export const Showuser = () => {
@@ -48,7 +48,7 @@ export const Showuser = () => {
         }
         return(
             <>
-            <Navbar/>
+            {/* <Navbar/> */}
             <div className='ui container' style={{
                 margin: 'auto',
                 width: '80%',

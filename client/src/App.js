@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {Welcomepage} from './components/Welcomepage/Welcomepage.js';
 import {Homepage} from './components/Homepage/Homepage.js';
-// import { Navbar } from './components/Navbar/Navbar.js';
+import { Navbar } from './components/Navbar/Navbar.js';
 import {Showuser} from './components/User/Showuser.js';
 import {Newuser} from './components/User/Newuser.js';
 import {Edituser} from './components/User/Edituser.js';
@@ -29,7 +29,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {/* <Navbar/> */}
+        <Navbar/>
         {/* <div className='container' style={{padding: '1%'}}> */}
         <Routes>
           <Route path='/' element={<Welcomepage/>}/>

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { notify } from '../CustomStyling/notify';
-import { Navbar } from '../Navbar/Navbar.js';
+// import { Navbar } from '../Navbar/Navbar.js';
 
 export const Deletepost = (props) => {
     const {postId} = useParams();
@@ -41,7 +41,7 @@ export const Deletepost = (props) => {
 
     return(
         <div>
-        <Navbar/>
+        {/* <Navbar/> */}
             {navigate('/home')}
         </div>
     )

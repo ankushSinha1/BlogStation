@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import {notify} from '../CustomStyling/notify.js';
 import { useNavigate, useParams } from "react-router-dom";
-import { Navbar } from '../Navbar/Navbar.js';
+// import { Navbar } from '../Navbar/Navbar.js';
 
 export const Deleteuser = () => {
     const {userId} = useParams();
@@ -43,7 +43,7 @@ export const Deleteuser = () => {
         {navigate('/home')}
     }
     return(<>
-        <Navbar/>
+        {/* <Navbar/> */}
         {deleteUser()}
     </>)
 }

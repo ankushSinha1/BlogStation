@@ -2,7 +2,7 @@ import React,{useEffect, useState} from "react"
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import {notify} from '../CustomStyling/notify.js';
-import { Navbar } from '../Navbar/Navbar.js';
+// import { Navbar } from '../Navbar/Navbar.js';
 
 export const Newpost = () => {
     const user = localStorage.getItem('user');
@@ -112,7 +112,7 @@ export const Newpost = () => {
     }
     return(
         <>
-        <Navbar/>
+        {/* <Navbar/> */}
         <div className="ui container" style={{
             marginLeft: '50%',
             marginRight: '50%'

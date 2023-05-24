@@ -4,7 +4,7 @@ import { notify } from "../CustomStyling/notify.js";
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import {Newcomment} from '../Comments/Newcomment.js'
 import {monthNumToName} from '../Controllers/monthNumToName.js';
-import { Navbar } from '../Navbar/Navbar.js';
+// import { Navbar } from '../Navbar/Navbar.js';
 
 
 export const Showpost = () => {
@@ -154,7 +154,7 @@ export const Showpost = () => {
     if(postDetails.author){
         return(
             <>
-            <Navbar/>
+            {/* <Navbar/> */}
                 <div className="ui container" 
                 style={{
                     marginLeft: '50%', 
