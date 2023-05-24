@@ -70,10 +70,10 @@ export const Showpost = () => {
             )
         }
     }
-    const deleteComment = (COMMENT) => {
+    const deleteComment = async (COMMENT) => {
         console.log(COMMENT)
         if(COMMENT.author.email === JSON.parse(user).user.email){
-            axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${COMMENT._id}/delete`)
+            await axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${COMMENT._id}/delete`)
             .then((res) => notify(res.data.msg))
             .catch(err => console.log(err))
         }else{
