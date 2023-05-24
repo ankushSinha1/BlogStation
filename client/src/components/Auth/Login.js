@@ -10,7 +10,7 @@ import { notify } from '../CustomStyling/notify.js';
 export const Login = () => {
     const navigate = useNavigate();
     const user = localStorage.getItem('user');
-    const state = useSelector(state.login);
+    const login = useSelector(state => state.login);
     const dispatch = useDispatch();
     const actions = bindActionCreators(actionCreator, dispatch);
     const [email, setemail] = useState('');

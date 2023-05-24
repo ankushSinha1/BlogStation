@@ -11,8 +11,8 @@ const user = localStorage.getItem('user')
 
 export const Navbar = () => {
     const navigate = useNavigate()
-    const state = useSelector(state.login);
-    console.log(state)
+    const login = useSelector(state => state.login);
+    // console.log(login)
     const dispatch = useDispatch();
     const actions = bindActionCreators(actionCreator, dispatch)
     // const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -30,8 +30,8 @@ export const Navbar = () => {
         actions.onLogout(false)
         notify('Logged out successfully!')
     }
-    const loggedIn = (state) => {
-        if(!state){
+    const loggedIn = (login) => {
+        if(!login){
             return(
                 <div className="right menu" >
                     <div  className="item" style={{padding: '4px'}}> 
@@ -81,15 +81,15 @@ export const Navbar = () => {
         }} >
             <div className="ui menu " style={{backgroundColor: 'white'}}>
                 <div  className='item' onClick={()=>{navigate('/')}} style={{cursor: 'pointer'}}>
-                    <div>BlogStation</div>
+                    <div><b>BlogStation</b></div>
                 </div>
                 <div  className="item" onClick={()=>{navigate('/home')}} style={{cursor: 'pointer'}}>
-                    <div >Home</div>
+                    <div ><b>Home</b></div>
                 </div>
                 <div  className="item" onClick={()=>{navigate('/posts/new')}} style={{cursor: 'pointer'}}>
-                    <div >Add post</div>
+                    <div ><b>Add post</b></div>
                 </div>
-                {loggedIn(state)}
+                {loggedIn(login)}
             </div>
         </div>
         </>

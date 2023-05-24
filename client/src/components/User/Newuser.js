@@ -10,7 +10,7 @@ import { actionCreator } from '../../state/index.js';
 
 export const Newuser = () => {
     const navigate = useNavigate();
-    const state = useSelector(state.login);
+    const login = useSelector(state => state.login);
     const dispatch = useDispatch();
     const actions = bindActionCreators(actionCreator, dispatch);
 
