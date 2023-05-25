@@ -19,39 +19,39 @@ export const Showuser = () => {
         .catch((error) => {console.log(error)})
     }, [])
     console.log(userData)
+    const authForEditAndDeleteUser = () => {
+        if(user && JSON.parse(user).user._id === userId){
+            return (
+                <div style={{
+                    marginLeft: '4%',
+                    // marginTop: '4%',
+                    marginRight: '4%',
+                    marginBottom: '2%',
+                    // display: 'inline'
+                }}>
+                    <Link to={`/user/${userId}/edit`} 
+                        className="ui button primary">
+                            Edit user details
+                    </Link>
+                    <Link to={`/user/${userId}/delete`} 
+                        className="ui button red"
+                        style={{
+                            float: 'right'
+                        }}
+                        >
+                            Delete user
+                    </Link>
+                </div>
+            )
+        }else{
+            return(<></>)
+        }
+    }
     if(userData.msg ===  'User does not exist!' ){
         notify(userData.msg)
         navigate(-1);
     }
     else if(userData._id){
-        const authForEditAndDeleteUser = () => {
-            if(user && JSON.parse(user).user._id === userId){
-                return (
-                    <div style={{
-                        marginLeft: '4%',
-                        // marginTop: '4%',
-                        marginRight: '4%',
-                        marginBottom: '2%',
-                        // display: 'inline'
-                    }}>
-                        <Link to={`/user/${userId}/edit`} 
-                            className="ui button primary">
-                                Edit user details
-                        </Link>
-                        <Link to={`/user/${userId}/delete`} 
-                            className="ui button red"
-                            style={{
-                                float: 'right'
-                            }}
-                            >
-                                Delete user
-                        </Link>
-                    </div>
-                )
-            }else{
-                return(<></>)
-            }
-        }
         return(
             <>
             {/* <Navbar/> */}
@@ -193,7 +193,8 @@ export const Showuser = () => {
             </div>
             </>
         )
-    }else{
+    }
+    else{
         return(
             <div>Loading...</div>
         )
