@@ -15,7 +15,7 @@ export const Showuser = () => {
             axios.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
         }
         await axios.get(`https://blogstation-agfm.onrender.com/user/${userId}`)
-        .then((res)=>{setUserData(res.data)})
+        .then(async (res)=>{ setUserData(res.data)})
         .catch((error) => {console.log(error)})
     }, [])
     console.log(userData)
@@ -192,6 +192,10 @@ export const Showuser = () => {
                 </div>
             </div>
             </>
+        )
+    }else{
+        return(
+            <div>Loading...</div>
         )
     }
 }
