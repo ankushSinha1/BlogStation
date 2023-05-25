@@ -1,14 +1,14 @@
-export const onLogin = (state)=> {
+export const onLogin = (status)=> {
     return (dispatch) => 
     dispatch({
         type: 'LOGIN',
-        payload: state,
+        payload: status,
     })
 }
-export const onLogout = (state) => {
+export const onLogout = (status) => {
     return (dispatch) => 
     dispatch({
         type: 'LOGOUT',
-        payload: state,
+        payload: status,
     })
 }

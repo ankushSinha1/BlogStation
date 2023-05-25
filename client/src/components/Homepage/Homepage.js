@@ -3,8 +3,6 @@ import axios from 'axios';
 import {useNavigate } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {monthNumToName} from '../Controllers/monthNumToName'
-// import { Navbar } from './components/Navbar/Navbar.js';
-// import { Navbar } from '../Navbar/Navbar.js';
 export const Homepage = () => {
     const navigate = useNavigate()
     const [allPosts, setAllPosts] = useState([]);
@@ -85,7 +83,6 @@ export const Homepage = () => {
     }
     return(
         <>
-        {/* <Navbar/> */}
         <div className='ui three column doubling grid' >
             {displayAllPosts(allPosts)}
         </div>

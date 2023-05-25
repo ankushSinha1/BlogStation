@@ -34,7 +34,7 @@ export const Login = () => {
             await axios.post('https://blogstation-agfm.onrender.com/login', loginData)
             .then((res) => {
                 if(res.data.token){
-                    actions.onLogin(true)
+                    actions.onLogin({isLoggedIn: 'true'})
                     //Sets the authorization parameter in req.headers
                     localStorage.setItem('user', JSON.stringify(res.data))
                     axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
