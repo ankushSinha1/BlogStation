@@ -19,13 +19,13 @@ export const Navbar = () => {
         await axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
         .then(data => console.log(data.data.msg))
         .catch(err => console.log(err))
-        actions.onLogout({isLoggedIn: 'false'})
+        actions.onLogout({isLoggedIn: false})
         localStorage.clear()
         axios.defaults.headers.common['Authorization'] = '';
         notify('Logged out successfully!')
     }
     const loggedIn = (login) => {
-        if(!login.isLoggedIn){
+        if(login.isLoggedIn === false){
             return(
                 <div className="right menu" >
                     <div  className="item" style={{padding: '4px'}}> 

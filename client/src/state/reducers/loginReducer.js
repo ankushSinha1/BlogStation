@@ -1,8 +1,8 @@
-const loginReducer = (state={isLoggedIn: 'false'}, action) => {
+const loginReducer = (state={isLoggedIn: false}, action) => {
     if(action.type === 'LOGIN'){
-        return {...state, isLoggedIn: 'true'};
+        return {...state, isLoggedIn: true};
     }else if(action.type === 'LOGOUT'){
-        return  {...state, isLoggedIn: 'false'};
+        return  {...state, isLoggedIn: false};
     }else{
         return state;
     }

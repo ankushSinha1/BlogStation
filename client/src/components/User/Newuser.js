@@ -104,7 +104,7 @@ export const Newuser = () => {
                 }
             })
             .catch((error) => {console.log(error)});
-            actions.onLogin({isLoggedIn: 'true'});
+            actions.onLogin({isLoggedIn: true});
             setFirstName('')
             setLastName('')
             setUsername('')
