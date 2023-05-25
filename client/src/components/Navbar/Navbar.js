@@ -7,11 +7,11 @@ import axios from 'axios'
 import { notify } from "../CustomStyling/notify.js";
 // import { Logout } from "../Auth/Logout.js";
 // import { useEffect, useState } from "react";
-const user = localStorage.getItem('user')
 
 export const Navbar = () => {
     const navigate = useNavigate()
     const login = useSelector(state => state.login);
+    const user = localStorage.getItem('user')
     console.log(login)
     const dispatch = useDispatch();
     const actions = bindActionCreators(actionCreator, dispatch)
