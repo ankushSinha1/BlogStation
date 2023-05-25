@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 // import { Navbar } from '../Navbar/Navbar.js';
 
 
 export const Showuser = () => {
     var {userId} = useParams()
+    const navigate = useNavigate()
     const [userData, setUserData] = useState({})
     let user = localStorage.getItem('user')
     useEffect(async () => {
@@ -17,8 +18,11 @@ export const Showuser = () => {
         .catch((error) => {console.log(error)})
     }, [])
     console.log(userData)
-    if(!userData._id ){ return <div> User not found </div> }
-    else{
+    if(userData.msg ===  'User does not exist!' ){
+        notify(userData.msg)
+        navigate(-1);
+    }
+    else if(userData._id){
         const authForEditAndDeleteUser = () => {
             if(user && JSON.parse(user).user._id === userId){
                 return (
@@ -181,7 +185,7 @@ export const Showuser = () => {
                                         ><b>{userData.followers} Followers</b></div>
                                 </div>
                             </div>
-                                    {authForEditAndDeleteUser()}
+                            {authForEditAndDeleteUser()}
                         </div>
                     </div>
                 </div>

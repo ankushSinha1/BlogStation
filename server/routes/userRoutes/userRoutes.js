@@ -58,13 +58,16 @@ router.route("/new").post(async (req, res) => {
 });
 //READ
 router.route('/:userId').get((req, res) => {
-  User.findById(req.params.userId)
-  .then((data) => {
-    return res.json(data);
-  })
-  .catch(err => {
-    return res.json({err: err.toString()})
-  })
+  const response = User.findById(req.params.userId)
+  if(!response){
+    return res.json({msg: 'User does not exist!'})
+  }
+  try{
+    return res.json(response)
+
+  }catch{
+    return res.json({msg: err.toString()})
+  }
 });
 
 //UPDATE
