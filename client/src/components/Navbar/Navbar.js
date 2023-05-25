@@ -25,7 +25,7 @@ export const Navbar = () => {
         notify('Logged out successfully!')
     }
     const loggedIn = (login) => {
-        if(login.isLoggedIn === false){
+        if(login.isLoggedIn === false && !user){
             return(
                 <div className="right menu" >
                     <div  className="item" style={{padding: '4px'}}> 
