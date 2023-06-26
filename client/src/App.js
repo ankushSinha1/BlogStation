@@ -21,7 +21,7 @@ function App() {
   const [message, setMessage] = useState("");
   useEffect(()=>{
     // fetch("https://blogstation-agfm.onrender.com")
-    fetch("http://localhost:3001")
+    fetch("https://blogstation-agfm.onrender.com")
     .then(res => res.json())
     .then(data => setMessage(data.message))
 
