@@ -72,7 +72,6 @@ export const Showpost = () => {
         }
     }
     const deleteComment = async (COMMENT) => {
-        console.log(COMMENT)
         if(COMMENT.author.email === JSON.parse(user).user.email){
             await rootRoute.delete(`/posts/${postId}/comment/${COMMENT._id}/delete`)
             .then((res) => notify(res.data.msg))

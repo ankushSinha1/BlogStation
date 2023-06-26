@@ -74,11 +74,11 @@ export const Homepage = () => {
         }else{
             return(
                 <div>
-                    {/* <div className="ui active inverted dimmer" >
+                    <div className="ui active inverted dimmer" >
                         <div className='ui large text loader'>
                             <p>Fetching all posts</p>
                         </div>
-                    </div> */}
+                    </div>
                 </div>
             ) 
         }
