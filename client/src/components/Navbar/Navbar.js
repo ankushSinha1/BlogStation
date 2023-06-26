@@ -15,7 +15,7 @@ export const Navbar = () => {
     const dispatch = useDispatch();
     const actions = bindActionCreators(actionCreator, dispatch)
     const Logout = async () => {
-        await rootRoute.post('/deleteRefToken', JSON.parse(user))
+        await rootRoute.post('/deleteRefToken', JSON.parse(user).refToken)
         .then(data => console.log(data.data.msg))
         .catch(err => console.log(err))
         actions.onLogout({isLoggedIn: false})
