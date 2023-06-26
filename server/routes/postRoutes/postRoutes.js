@@ -4,7 +4,6 @@ import Post from '../../models/Post.js';
 import Comment from "../../models/Comment.js";
 import { protect } from "../../middleware/index.js";
 import cloudinary from 'cloudinary';
-import mongoose from "mongoose";
 cloudinary.config({
     cloud_name: 'dvstzyogy',
     api_key: '544918322574147',

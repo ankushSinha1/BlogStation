@@ -5,6 +5,7 @@ import {notify} from '../CustomStyling/notify.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionCreator } from '../../state/index.js';
+import rootRoute from '../API/axiosRoot.js';
 // import { Navbar } from '../Navbar/Navbar.js';
 
 
@@ -85,20 +86,20 @@ export const Newuser = () => {
         if(!dP.myPict){
             notify('No image was given. Please upload an image')
         }else{
-            await axios.post('https://blogstation-agfm.onrender.com/posts/uploadImage', dP)
+            await rootRoute.post('/posts/uploadImage', dP)
             .then(res => {
                 newUser.dP = res.data.secure_url
             })
             .catch(err => console.log(err))
             //For creating new user
-            await axios.post('https://blogstation-agfm.onrender.com/user/new', newUser)
+            await rootRoute.post('/user/new', newUser)
             .then((res) => {
                 if(res.data.msg === 'User with this email already exists!'){
                     notify(res.data.msg)
                     navigate('/user/new')
                 }else{
-                    localStorage.setItem('user', JSON.stringify(res.data))
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+                    localStorage.setItem('user', JSON.stringify(res.data.response))
+                    rootRoute.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
                     navigate('/home')
                     notify('Welcome to BlogStation')
                 }

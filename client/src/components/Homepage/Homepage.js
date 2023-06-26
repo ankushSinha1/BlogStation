@@ -1,17 +1,19 @@
 import React from 'react';
 import axios from 'axios';
-import {useNavigate } from 'react-router-dom';
+import {json, useNavigate } from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import {monthNumToName} from '../Controllers/monthNumToName'
+import {monthNumToName} from '../Controllers/monthNumToName';
+import rootRoute from '../API/axiosRoot.js'
+
 export const Homepage = () => {
     const navigate = useNavigate()
     const [allPosts, setAllPosts] = useState([]);
     const user = localStorage.getItem('user')
     useEffect(() => {
         if(user){
-            axios.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(user).token}`;
+            rootRoute.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(user).token}`;
         }
-        axios.get(`https://blogstation-agfm.onrender.com/home`)
+        rootRoute.get('home')
         .then(res => {setAllPosts(res.data)})
         .catch(err =>console.log(err) )
     }, [])
@@ -72,11 +74,11 @@ export const Homepage = () => {
         }else{
             return(
                 <div>
-                    <div className="ui active inverted dimmer" >
+                    {/* <div className="ui active inverted dimmer" >
                         <div className='ui large text loader'>
                             <p>Fetching all posts</p>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             ) 
         }

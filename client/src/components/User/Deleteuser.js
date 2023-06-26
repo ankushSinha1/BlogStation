@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import {notify} from '../CustomStyling/notify.js';
 import { useNavigate, useParams } from "react-router-dom";
+import rootRoute from "../API/axiosRoot.js";
 // import { Navbar } from '../Navbar/Navbar.js';
 
 export const Deleteuser = () => {
@@ -15,7 +16,7 @@ export const Deleteuser = () => {
             navigate('/login')
         }else{
 
-            axios.get(`https://blogstation-agfm.onrender.com/user/${userId}`)
+            rootRoute.get(`/user/${userId}`)
             .then(res => {
                 setUserDetails(res.data)
             })
@@ -26,10 +27,10 @@ export const Deleteuser = () => {
     const deleteUser = () => {
         if(userDetails._id){
             if(userDetails.email === JSON.parse(user).user.email){
-                axios.delete(`https://blogstation-agfm.onrender.com/user/${userId}/delete`)
+                rootRoute.delete(`/user/${userId}/delete`)
                 .then((res)=>{
                     localStorage.clear();
-                    axios.defaults.headers.common['Authorization'] = ``;
+                    rootRoute.defaults.headers.common['Authorization'] = ``;
                     navigate('/home')
                     notify(res.data.msg);
                 })

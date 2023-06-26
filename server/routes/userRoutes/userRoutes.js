@@ -52,23 +52,29 @@ router.route("/new").post(async (req, res) => {
   newRefToken.save();
   try {
     return res.json({response, msg: 'User fetched'});
-  } catch (err) {
+  }catch (err) {
     return res.json(err.toString());
   }
 });
 //READ
 router.route('/:userId').get((req, res) => {
-  const response = User.findById(req.params.userId)
-  if(!response){
-    return res.json({msg: 'User does not exist!'})
-  }
-  try{
-    return res.json(response)
-
-  }catch{
-    return res.json({msg: err.toString()})
-  }
-});
+  // console.log(req.params.)
+  // const response = User.findById(req.params.userId)
+  // if(!response){
+    //   return res.json({msg: 'User does not exist!'})
+  // }
+  User.findById(req.params.userId)
+  .then(data => {
+    if(data === null){
+      return res.json({msg: 'User does not exist!'})
+    }else{
+      return res.json(data)
+    }
+  })
+  .catch(err => {
+    return {msg: err.toString()}
+  });
+})
 
 //UPDATE
 router.route("/:userId/edit").get(protect, (req, res) => {

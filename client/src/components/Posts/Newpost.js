@@ -2,6 +2,7 @@ import React,{useEffect, useState} from "react"
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import {notify} from '../CustomStyling/notify.js';
+import rootRoute from "../API/axiosRoot.js";
 // import { Navbar } from '../Navbar/Navbar.js';
 
 export const Newpost = () => {
@@ -17,7 +18,7 @@ export const Newpost = () => {
             notify('You need to be logged in to do that!')
             navigate('/login')
         }else{
-            axios.get(`https://blogstation-agfm.onrender.com/user/${JSON.parse(user).user._id}`)
+            rootRoute.get(`/user/${JSON.parse(user).user._id}`)
             .then((res) => {
                 setAuthorDetails(res.data)
             }).catch(err => console.log(err))
@@ -63,23 +64,23 @@ export const Newpost = () => {
             notify('No image was given. Please upload an image')
         }else{
             
-            await axios.post('https://blogstation-agfm.onrender.com/posts/uploadImage', picture)
+            await rootRoute.post('/posts/uploadImage', picture)
             .then(res => {
                 newPost.picture = res.data.secure_url
             })
             .catch(err => console.log(err))
             
             //For creating a new post
-            await axios.post('https://blogstation-agfm.onrender.com/posts/new', newPost)
+            await rootRoute.post('/posts/new', newPost)
             .then((res) => {
                 //if access token is expired
                 if(res.data.msg === 'Token expired!'){
                     notify('Id expired.')
-                    axios.post('https://blogstation-agfm.onrender.com/refToken', JSON.parse(user))
+                    rootRoute.post('/refToken', JSON.parse(user))
                     .then(data => {
                         //if reftoken is also expired
                         if(data.data.msg === 'RefToken expired'){
-                            axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
+                            rootRoute.post('/deleteRefToken', JSON.parse(user))
                             .then(data => console.log(data))
                             .catch(err => console.log(err))
                             notify('Error occurred. Login required')
@@ -88,7 +89,7 @@ export const Newpost = () => {
                             //if reftoken is intact
                             localStorage.clear()
                             localStorage.setItem('user', JSON.stringify(data.data))
-                            axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
+                            rootRoute.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
                             navigate('/home')
                             notify('New Id registered!')
                             notify("Could not submit your post. Try again.")

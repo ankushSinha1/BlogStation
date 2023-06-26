@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../../models/User.js';
 import RefToken from '../../models/refToken.js';
-const tokenList = [];
 
 //A function that generates a access token
 const tokenGen = (data) => {

@@ -4,6 +4,7 @@ import { notify } from "../CustomStyling/notify.js";
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import {Newcomment} from '../Comments/Newcomment.js'
 import {monthNumToName} from '../Controllers/monthNumToName.js';
+import rootRoute from "../API/axiosRoot.js";
 // import { Navbar } from '../Navbar/Navbar.js';
 
 
@@ -15,14 +16,14 @@ export const Showpost = () => {
     const user = localStorage.getItem('user')
     useEffect(()=>{
         if(user){
-            axios.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
+            rootRoute.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
         }
-        axios.get(`https://blogstation-agfm.onrender.com/posts/${postId}`)
+        rootRoute.get(`/posts/${postId}`)
         .then((res) => {
             setPostDetails(res.data)
         })
         .catch((err)=>console.log(err));
-        axios.get(`https://blogstation-agfm.onrender.com/posts/${postId}/comment`)
+        rootRoute.get(`/posts/${postId}/comment`)
         .then((res) => {
             setPostComments(res.data)
         })
@@ -73,7 +74,7 @@ export const Showpost = () => {
     const deleteComment = async (COMMENT) => {
         console.log(COMMENT)
         if(COMMENT.author.email === JSON.parse(user).user.email){
-            await axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${COMMENT._id}/delete`)
+            await rootRoute.delete(`/posts/${postId}/comment/${COMMENT._id}/delete`)
             .then((res) => notify(res.data.msg))
             .catch(err => console.log(err))
         }else{

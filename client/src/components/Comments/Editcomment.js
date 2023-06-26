@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
+import rootRoute from '../API/axiosRoot.js';
 import { useNavigate, useParams } from "react-router-dom";
 import {notify} from '../CustomStyling/notify'
 export const Editcomment = () => {
@@ -10,7 +11,7 @@ export const Editcomment = () => {
     const [commentDetails, setCommentDetails] = useState({});
     
     useEffect(() => {
-        axios.get(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${commentId}`)
+        rootRoute.get(`/posts/${postId}/comment/${commentId}`)
         .then((res) => setCommentDetails(res.data))
         .catch(err => console.log(err))
     }, [])
@@ -23,7 +24,7 @@ export const Editcomment = () => {
             totalReports: 0,
             postId: postId, 
         }
-        await axios.patch(`https://blogstation-agfm.onrender.com/posts/${postId}/comment/${commentId}/update`, updatedComment)
+        await rootRoute.patch(`/posts/${postId}/comment/${commentId}/update`, updatedComment)
         .then((res) => {
             notify(res.data.msg)
             navigate(`/posts/${postId}`)  

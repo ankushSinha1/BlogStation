@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {actionCreator} from '../../state/index.js';
 import { notify } from '../CustomStyling/notify.js';
+import rootRoute from '../API/axiosRoot.js';
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -31,13 +32,14 @@ export const Login = () => {
             notify('You are already logged in')
             navigate('/home')
         }else{
-            await axios.post('https://blogstation-agfm.onrender.com/login', loginData)
+            // await axios.post('https://blogstation-agfm.onrender.com/login', loginData)
+            await rootRoute.post('login', loginData)
             .then((res) => {
                 if(res.data.token){
                     actions.onLogin({isLoggedIn: true})
                     //Sets the authorization parameter in req.headers
                     localStorage.setItem('user', JSON.stringify(res.data))
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+                    rootRoute.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
                     navigate('/home');
                     notify(res.data.msg)
                 }else{

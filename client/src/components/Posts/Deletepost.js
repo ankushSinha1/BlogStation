@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { notify } from '../CustomStyling/notify';
+import rootRoute from '../API/axiosRoot';
 // import { Navbar } from '../Navbar/Navbar.js';
 
 export const Deletepost = (props) => {
@@ -10,10 +11,10 @@ export const Deletepost = (props) => {
     const user = localStorage.getItem('user')
     const navigate = useNavigate();
     useEffect(()=> {
-        axios.get(`https://blogstation-agfm.onrender.com/posts/${postId}`)
+        rootRoute.get(`/posts/${postId}`)
         .then(res => {setPostDetails(res.data)})
         .catch(err => console.log(err))
-        axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/delete`)
+        rootRoute.delete(`/posts/${postId}/delete`)
         .then(res => {
             notify(res.data.msg)
         })
@@ -24,7 +25,7 @@ export const Deletepost = (props) => {
         // if(postDetails.author){
         //     if(postDetails.author.username === JSON.parse(user).user.username){      
         //         console.log(postDetails)
-        //         axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/delete`)
+        //         axios.delete(`/posts/${postId}/delete`)
         //         .then(res => {
         //             notify(res.data.msg)
         //         })
@@ -39,7 +40,7 @@ export const Deletepost = (props) => {
         // }
     }, [])
     const deletePost = async () => {
-        await axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/delete`)
+        await rootRoute.delete(`/posts/${postId}/delete`)
         .then(res => {
             notify(res.data.msg)
         })
@@ -50,7 +51,7 @@ export const Deletepost = (props) => {
         if(postDetails.author){
             if(postDetails.author.username === JSON.parse(user).user.username){      
                 console.log(postDetails)
-                axios.delete(`https://blogstation-agfm.onrender.com/posts/${postId}/delete`)
+                rootRoute.delete(`/posts/${postId}/delete`)
                 .then(res => {
                     notify(res.data.msg)
                 })

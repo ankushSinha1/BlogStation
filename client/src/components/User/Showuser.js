@@ -2,23 +2,27 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { notify } from '../CustomStyling/notify';
-// import { Navbar } from '../Navbar/Navbar.js';
-
+import rootRoute from '../API/axiosRoot';
 
 export const Showuser = () => {
     var {userId} = useParams()
     const navigate = useNavigate()
     const [userData, setUserData] = useState({})
     let user = localStorage.getItem('user')
-    useEffect(async () => {
+    useEffect( () => {
         if(user){
-            axios.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
+            rootRoute.defaults.headers.common['Authorization'] =  `Bearer ${JSON.parse(user).token}`
         }
-        await axios.get(`https://blogstation-agfm.onrender.com/user/${userId}`)
-        .then(async (res)=>{ setUserData(res.data)})
-        .catch((error) => {console.log(error)})
+        const getUserData = () => {
+            rootRoute.get(`/user/${userId}`)
+            .then((res)=>{ {
+                setUserData(res.data)
+            }})
+            .catch((error) => {console.log(error)})
+        }
+        getUserData()
     }, [])
-    console.log(userData)
+    // console.log(userData)
     const authForEditAndDeleteUser = () => {
         if(user && JSON.parse(user).user._id === userId){
             return (

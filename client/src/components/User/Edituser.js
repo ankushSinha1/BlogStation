@@ -2,6 +2,7 @@ import React,{useState, useEffect} from "react";
 import axios from "axios";
 import { notify } from "../CustomStyling/notify";
 import { useNavigate, useParams } from "react-router-dom";
+import rootRoute from "../API/axiosRoot";
 // import { Navbar } from '../Navbar/Navbar.js';
 
 export const Edituser= () =>{
@@ -23,15 +24,15 @@ export const Edituser= () =>{
             navigate('/login')
         }
         //Before rendering the edit user form
-         axios.get(`https://blogstation-agfm.onrender.com/user/${userId}/edit`)
+         rootRoute.get(`/user/${userId}/edit`)
         .then((res)=>{
             if(res.data.msg === 'Token expired!'){
                 notify('Id expired.')
-                axios.post('https://blogstation-agfm.onrender.com/refToken', JSON.parse(user))
+                rootRoute.post('/refToken', JSON.parse(user))
                 .then(data => {
                     //if reftoken is also expired
                     if(data.data.msg === 'RefToken expired'){
-                        axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
+                        rootRoute.post('/deleteRefToken', JSON.parse(user))
                         .then(data => console.log(data))
                         .catch(err => console.log(err))
                         notify('Error occurred. Login required')
@@ -40,7 +41,7 @@ export const Edituser= () =>{
                         //if reftoken is intact
                         localStorage.clear()
                         localStorage.setItem('user', JSON.stringify(data.data))
-                        axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
+                        rootRoute.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
                         navigate('/home')
                         notify('New Id registered!')
                         notify("Could not edit user details. Try again.")
@@ -64,7 +65,6 @@ export const Edituser= () =>{
     }, [])
     const onChangeDp = async(e) => {
         setDp({myPict: ''})
-
         const file = e.target.files[0]
         const base64 = await convToBase64(file)
         setDp({myPict: base64})
@@ -99,10 +99,10 @@ export const Edituser= () =>{
             notify('No image was given. Please upload an image')
         }else{
             
-            await axios.post('https://blogstation-agfm.onrender.com/user/uploadImage', dP)
+            await rootRoute.post('/user/uploadImage', dP)
             .then(res => {updatedUser.dP = res.data.secure_url})
             .catch(err => console.log(err))
-            await axios.patch(`https://blogstation-agfm.onrender.com/user/${userId}/update`, updatedUser)
+            await rootRoute.patch(`/user/${userId}/update`, updatedUser)
             .then((res)=>{
                 notify(res.data.msg)
             })
@@ -155,7 +155,7 @@ export const Edituser= () =>{
                             >
                             <center>
 
-                            <img src={dP.myPict} alt='Selected image will be shown here' className='responsive'
+                            <img src={dP.myPict ? dP.myPict : userDetails.dP} alt='Selected image will be shown here' className='responsive'
                                 style={{
                                     position: 'float',
                                     maxHeight: '50%',
@@ -167,7 +167,10 @@ export const Edituser= () =>{
                                 </center>
                             <center>
                                 {dP.myPict ? (
-                                    <button onClick={() => setDp({myPict: ''})}
+                                    <button onClick={() => {
+                                        setDp({myPict: ''})
+                                        setUserDetails({dP:''})
+                                    }}
                                     className='ui button' 
                                         style={{
                                             marginTop: '55px',

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { notify } from '../CustomStyling/notify';
 import { useNavigate, useParams } from 'react-router-dom';
+import rootRoute from '../API/axiosRoot';
 // import { Navbar } from '../Navbar/Navbar.js';
 
 
@@ -19,15 +20,15 @@ export const Editpost = (props) => {
             notify('You need to be logged in to do that!')
             navigate('/login')
         }
-        axios.get(`https://blogstation-agfm.onrender.com/posts/${postId}/edit`)
+        rootRoute.get(`/posts/${postId}/edit`)
         .then( res => {
             if(res.data.msg === 'Token expired!'){
                 notify('Id expired.')
-                axios.post('https://blogstation-agfm.onrender.com/refToken', JSON.parse(user))
+                rootRoute.post('/refToken', JSON.parse(user))
                 .then(data => {
                     //if reftoken is also expired
                     if(data.data.msg === 'RefToken expired'){
-                        axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
+                        rootRoute.post('/deleteRefToken', JSON.parse(user))
                         .then(data => console.log(data))
                         .catch(err => console.log(err))
                         notify('Error occurred. Login required')
@@ -36,7 +37,7 @@ export const Editpost = (props) => {
                         //if reftoken is intact
                         localStorage.clear()
                         localStorage.setItem('user', JSON.stringify(data.data))
-                        axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
+                        rootRoute.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
                         navigate('/home')
                         notify('New Id registered!')
                         notify("Could not edit your details. Try again.")
@@ -86,10 +87,10 @@ export const Editpost = (props) => {
             notify('No image was given. Please upload an image')
         }else{
             
-            await axios.post('https://blogstation-agfm.onrender.com/posts/uploadImage', picture)
+            await rootRoute.post('/posts/uploadImage', picture)
             .then((res) => {updatedPost.picture = res.data.secure_url})
             .catch(err => console.log(err))
-            await axios.patch(`https://blogstation-agfm.onrender.com/posts/${postId}/update`, updatedPost)
+            await rootRoute.patch(`/posts/${postId}/update`, updatedPost)
             .then( res => notify(res.data.msg))
             setTitle('')
             setDescription('')

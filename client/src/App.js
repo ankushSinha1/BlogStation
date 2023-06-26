@@ -20,8 +20,9 @@ import '../node_modules/react-toastify/dist/ReactToastify.css';
 function App() {
   const [message, setMessage] = useState("");
   useEffect(()=>{
-    fetch("https://blogstation-agfm.onrender.com")
-    // .then(res => res.json())
+    // fetch("https://blogstation-agfm.onrender.com")
+    fetch("http://localhost:3001")
+    .then(res => res.json())
     .then(data => setMessage(data.message))
 
   }, [])

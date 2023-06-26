@@ -3,25 +3,24 @@ import { useNavigate } from "react-router-dom";
 import {useSelector, useDispatch} from 'react-redux';
 import { bindActionCreators } from "redux";
 import { actionCreator } from "../../state/index";
-import axios from 'axios'
 import { notify } from "../CustomStyling/notify.js";
+import rootRoute from "../API/axiosRoot";
 // import { Logout } from "../Auth/Logout.js";
 // import { useEffect, useState } from "react";
 
 export const Navbar = () => {
     const navigate = useNavigate()
-    const login = useSelector(state => state.login);
     const user = localStorage.getItem('user')
-    console.log(login)
+    const login = useSelector(state => state.login);
     const dispatch = useDispatch();
     const actions = bindActionCreators(actionCreator, dispatch)
     const Logout = async () => {
-        await axios.post('https://blogstation-agfm.onrender.com/deleteRefToken', JSON.parse(user))
+        await rootRoute.post('/deleteRefToken', JSON.parse(user))
         .then(data => console.log(data.data.msg))
         .catch(err => console.log(err))
         actions.onLogout({isLoggedIn: false})
         localStorage.clear()
-        axios.defaults.headers.common['Authorization'] = '';
+        rootRoute.defaults.headers.common['Authorization'] = '';
         notify('Logged out successfully!')
     }
     const loggedIn = (login) => {

@@ -1,8 +1,6 @@
 import express from 'express';
 import dotenv from "dotenv";
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes/userRoutes.js';
 import postRoutes from './routes/postRoutes/postRoutes.js';
@@ -24,8 +22,8 @@ dotenv.config();
 mongoose.connect(process.env.MONGO);
 
 app.use(cors({
-  origin: 'https://blogstation-ado3.onrender.com', 
   // origin: 'http://localhost:3000', 
+  origin: 'https://blogstation-ado3.onrender.com', 
   credentials: true
 }));
 app.use('/user', userRoutes);
